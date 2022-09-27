@@ -19,6 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class SignUp extends AppCompatActivity {
@@ -27,7 +28,7 @@ public class SignUp extends AppCompatActivity {
     private TextInputLayout regUsername, regPassword, regFullName, regEmail, regPhone;
     private FirebaseDatabase root;
     private DatabaseReference users_reference;
-    private  int amount;
+    Boolean taken = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,8 @@ public class SignUp extends AppCompatActivity {
     private Boolean validateUsername(){
         String val = regUsername.getEditText().getText().toString().trim();
         String noSpace = "\\A\\w{6,20}\\z";
+
+
         if(val.isEmpty()) {
             regUsername.setError("Filed cannot be empty");
             return false;
@@ -91,7 +94,7 @@ public class SignUp extends AppCompatActivity {
         else {
             regUsername.setError(null);
             regUsername.setErrorEnabled(false);
-            return  true;
+            return true;
         }
     }
 
@@ -171,33 +174,53 @@ public class SignUp extends AppCompatActivity {
         if(!validateName() | !validateUsername() | !validateEmail() | !validatePhone() | !validatePassword()) {
         }
         else {
-            String name = regFullName.getEditText().getText().toString().trim();
-            String username = regUsername.getEditText().getText().toString().trim();
-            String email = regEmail.getEditText().getText().toString().trim();
-            String phone = regPhone.getEditText().getText().toString().trim();
-            String password = regPassword.getEditText().getText().toString().trim();
 
-            User user = new User(name, username, email, phone, password);
+            Query checkUser = users_reference.orderByChild("username").equalTo(regUsername.getEditText().getText().toString().trim());
+            checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(!snapshot.exists()){
+                        regUsername.setError(null);
+                        regUsername.setErrorEnabled(false);
+                        String name = regFullName.getEditText().getText().toString().trim();
+                        String username = regUsername.getEditText().getText().toString().trim();
+                        String email = regEmail.getEditText().getText().toString().trim();
+                        String phone = regPhone.getEditText().getText().toString().trim();
+                        String password = regPassword.getEditText().getText().toString().trim();
+
+                        User user = new User(name, username, email, phone, password);
 
 
-            users_reference.child(regUsername.getEditText().getText().toString()).setValue(user);
+                        users_reference.child(regUsername.getEditText().getText().toString()).setValue(user);
 
-            Intent intent = new Intent(SignUp.this, Login.class);
+                        Intent intent = new Intent(SignUp.this, Login.class);
 
-            Pair[] pairs = new Pair[6];
-            pairs[0] = new Pair<View, String>(main, "logo_txt");
-            pairs[1] = new Pair<View, String>(slogan, "slogan");
-            pairs[2] = new Pair<View, String>(regUsername, "username");
-            pairs[3] = new Pair<View, String>(regPassword, "password");
-            pairs[4] = new Pair<View, String>(signup, "go_btn");
-            pairs[5] = new Pair<View, String>(toSignUp, "toOther");
+                        Pair[] pairs = new Pair[6];
+                        pairs[0] = new Pair<View, String>(main, "logo_txt");
+                        pairs[1] = new Pair<View, String>(slogan, "slogan");
+                        pairs[2] = new Pair<View, String>(regUsername, "username");
+                        pairs[3] = new Pair<View, String>(regPassword, "password");
+                        pairs[4] = new Pair<View, String>(signup, "go_btn");
+                        pairs[5] = new Pair<View, String>(toSignUp, "toOther");
 
-            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SignUp.this, pairs);
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SignUp.this, pairs);
 
-            intent.putExtra("username", regUsername.getEditText().getText().toString().trim());
-            intent.putExtra("password", regPassword.getEditText().getText().toString().trim());
+                        intent.putExtra("username", regUsername.getEditText().getText().toString().trim());
+                        intent.putExtra("password", regPassword.getEditText().getText().toString().trim());
 
-            startActivity(intent, options.toBundle());
+                        startActivity(intent, options.toBundle());;
+                    }
+                    else {
+                        regUsername.setError("Username is taken");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
         }
     }
 

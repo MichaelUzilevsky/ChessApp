@@ -1,5 +1,6 @@
 package com.example.chess;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -12,14 +13,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class UserProfile extends AppCompatActivity {
     private TextInputLayout username, password, fullName, email, phone;
     private TextView main_Username, main_name;
     private String _USERNAME, _NAME, _EMAIL, _PHONE, _PASSWORD;
     private DatabaseReference reference;
+    Boolean taken = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,16 +78,40 @@ public class UserProfile extends AppCompatActivity {
         }
     }
 
+    public Boolean checkIfExsist(){
+
+        if(_USERNAME.equals(username.getEditText().getText().toString()))
+            return false;
+
+        Query checkUser = reference.orderByChild("username").equalTo(username.getEditText().getText().toString().trim());
+        checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(!snapshot.exists()){
+                    taken = true;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return  taken;
+    }
+
     private  Boolean change_username(){
         if(_USERNAME.equals(username.getEditText().getText().toString()))
             return true;
 
         if(validateUsername()) {
+
             reference.child(_USERNAME).child("username").setValue(username.getEditText().getText().toString());
             _USERNAME = username.getEditText().getText().toString();
             main_Username.setText(_USERNAME);
             return true;
         }
+
         return false;
     }
 
@@ -164,6 +194,10 @@ public class UserProfile extends AppCompatActivity {
         }
         else if(!val.matches(noSpace)){
             username.setError("Spaces are not allowed");
+            return false;
+        }
+        else if(checkIfExsist()){
+            username.setError("username is taken");
             return false;
         }
         else {

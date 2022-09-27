@@ -15,39 +15,47 @@
         android:background="#B81D2E">
 
         <ImageView
+            android:src="@drawable/chess"
             android:id="@+id/profile_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:layout_centerVertical="true">
         </ImageView>
 
-        <TextView
-            android:id="@+id/fullname_label"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
-            android:includeFontPadding="false"
-            android:layout_toRightOf="@+id/profile_image"
-            android:fontFamily="@font/bungee_regular"
-            android:text="Michael Uzilevsky"
-            android:textSize="30dp"></TextView>
+    <RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:layout_toRightOf="@+id/profile_image">
 
         <TextView
+            android:id="@+id/fullname_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="michael_uzilevsky"
-            android:textSize="20dp"
-            android:id="@+id/username_label"
+            android:layout_marginLeft="8dp"
+            android:fontFamily="@font/bungee_regular"
             android:includeFontPadding="false"
+            android:text="Michael Uzilevsky"
             android:textColor="@color/white"
-            android:fontFamily="@font/antic_regular"
-            android:layout_toRightOf="@+id/profile_image"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_below="@+id/fullname_label">
-        </TextView>
+            android:textSize="35dp"></TextView>
+
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="michael_uzilevsky"
+        android:textSize="20dp"
+        android:id="@+id/username_label"
+        android:includeFontPadding="false"
+        android:textColor="@color/white"
+        android:fontFamily="@font/antic_regular"
+        android:layout_toRightOf="@+id/profile_image"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@+id/fullname_label">
+    </TextView>
+
+</RelativeLayout>
+
 
     </RelativeLayout>
 
@@ -70,8 +78,9 @@
                 android:layout_height="match_parent"
                 android:padding="5dp">
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:src="@drawable/lose"
                     android:layout_centerHorizontal="true">
                 </ImageView>
 
@@ -116,8 +125,9 @@
                 android:layout_height="match_parent"
                 android:padding="5dp">
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:src="@drawable/game_pad"
                     android:layout_centerHorizontal="true">
                 </ImageView>
 
@@ -162,8 +172,9 @@
                 android:layout_height="match_parent"
                 android:padding="5dp">
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:src="@drawable/trophy"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:layout_centerHorizontal="true">
                 </ImageView>
 
@@ -311,7 +322,7 @@
             android:onClick="update"
             android:fontFamily="@font/bungee_regular"
             android:textColor="@color/white"
-            android:backgroundTint="#B81D2E">
+            android:backgroundTint="#0D245D">
         </Button>
 
     </LinearLayout>
