@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Chess</string>
+    <string name="mobile_chess">Mobile Chess</string>
+    <string name="hello_there_welcome_back">hello there, welcome back</string>
+</resources>
