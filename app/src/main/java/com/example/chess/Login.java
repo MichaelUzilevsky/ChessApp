@@ -26,6 +26,7 @@ public class Login extends AppCompatActivity {
     private TextView main, slogan;
     private TextInputLayout username, password;
     private DatabaseReference users_reference;
+    private  int x;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
