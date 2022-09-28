@@ -27,8 +27,7 @@ public class SignUp extends AppCompatActivity {
     private TextView main, slogan;
     private TextInputLayout regUsername, regPassword, regFullName, regEmail, regPhone;
     private FirebaseDatabase root;
-    private DatabaseReference users_reference;
-    Boolean taken = false;
+    private DatabaseReference users_reference, username_reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +45,8 @@ public class SignUp extends AppCompatActivity {
         toSignUp = findViewById(R.id.toOther);
 
         root = FirebaseDatabase.getInstance();
-        users_reference = root.getReference("Users");
+        users_reference = root.getReference();
+        username_reference = root.getReference().child("Users");
 
         regFullName.getEditText().addTextChangedListener(new ValidationTextWatcher(regFullName));
         regUsername.getEditText().addTextChangedListener(new ValidationTextWatcher(regUsername));
@@ -175,7 +175,7 @@ public class SignUp extends AppCompatActivity {
         }
         else {
 
-            Query checkUser = users_reference.orderByChild("username").equalTo(regUsername.getEditText().getText().toString().trim());
+            Query checkUser = username_reference.orderByChild("username").equalTo(regUsername.getEditText().getText().toString().trim());
             checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {

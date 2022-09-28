@@ -3,7 +3,6 @@ package com.example.chess;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -31,7 +30,7 @@ public class UserProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference = FirebaseDatabase.getInstance().getReference().child("Users");
 
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
@@ -70,15 +69,15 @@ public class UserProfile extends AppCompatActivity {
     }
 
     public void update(View view) {
-        if(!change_username() | !change_email() | !change_name() | !change_password() | !change_phone()){
+        if(!change_email() | !change_name() | !change_password() | !change_phone()){
             Toast.makeText(this, "Invalid Data", Toast.LENGTH_SHORT).show();
         }
         else {
-
+                checkIfExsistAndChange();
         }
     }
 
-    public Boolean checkIfExsist(){
+    protected Boolean checkIfExsistAndChange(){
 
         if(_USERNAME.equals(username.getEditText().getText().toString()))
             return false;
@@ -88,7 +87,12 @@ public class UserProfile extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(!snapshot.exists()){
-                    taken = true;
+                    username.setError(null);
+                    username.setErrorEnabled(false);
+                    change_username();
+                }
+                else {
+                    username.setError("Username is taken");
                 }
             }
 
@@ -104,9 +108,28 @@ public class UserProfile extends AppCompatActivity {
         if(_USERNAME.equals(username.getEditText().getText().toString()))
             return true;
 
-        if(validateUsername()) {
+        else if(validateUsername()){
+            User user = new User(_NAME, username.getEditText().getText().toString(), _EMAIL, _PHONE, _PASSWORD);
+            reference.child(username.getEditText().getText().toString()).setValue(user);
 
-            reference.child(_USERNAME).child("username").setValue(username.getEditText().getText().toString());
+            //remove
+            Query remove = FirebaseDatabase.getInstance().getReference().child("Users").orderByChild("username").equalTo(_USERNAME);
+            remove.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot data: snapshot.getChildren()) {
+                        data.getRef().removeValue();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            //reference.child(_USERNAME).child("username").setValue(username.getEditText().getText().toString());
+
             _USERNAME = username.getEditText().getText().toString();
             main_Username.setText(_USERNAME);
             return true;
@@ -196,10 +219,7 @@ public class UserProfile extends AppCompatActivity {
             username.setError("Spaces are not allowed");
             return false;
         }
-        else if(checkIfExsist()){
-            username.setError("username is taken");
-            return false;
-        }
+
         else {
             username.setError(null);
             username.setErrorEnabled(false);

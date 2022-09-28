@@ -12,6 +12,7 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -111,8 +112,8 @@ public class Login extends AppCompatActivity {
         checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
 
+                if(snapshot.exists()){
                     username.setError(null);
                     username.setErrorEnabled(false);
                     String password_DB = snapshot.child(userEnterd_username).child("password").getValue().toString();
