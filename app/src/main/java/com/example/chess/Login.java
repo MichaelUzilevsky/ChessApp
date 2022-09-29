@@ -40,8 +40,8 @@ public class Login extends AppCompatActivity {
         login = findViewById(R.id.go);
         toSignUp = findViewById(R.id.toOther);
 
-        username.getEditText().addTextChangedListener(new ValidationTextWatcher(username));
-        password.getEditText().addTextChangedListener(new ValidationTextWatcher(password));
+//        username.getEditText().addTextChangedListener(new ValidationTextWatcher(username));
+//        password.getEditText().addTextChangedListener(new ValidationTextWatcher(password));
 
         Intent intent_signUp = getIntent();
         if(intent_signUp!= null){
