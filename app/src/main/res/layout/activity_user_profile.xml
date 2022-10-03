@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:padding="20dp"
-        android:background="#B81D2E">
+        android:background="#ff5e00">
 
         <ImageView
             android:src="@drawable/chess"
@@ -322,7 +322,7 @@
             android:onClick="update"
             android:fontFamily="@font/bungee_regular"
             android:textColor="@color/white"
-            android:backgroundTint="#0D245D">
+            android:backgroundTint="#101820">
         </Button>
 
     </LinearLayout>

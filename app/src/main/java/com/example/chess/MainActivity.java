@@ -1,32 +1,19 @@
 package com.example.chess;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.airbnb.lottie.LottieAnimationView;
 
 public class MainActivity extends AppCompatActivity /* implements View.OnClickListener*/ {
 
@@ -34,37 +21,45 @@ public class MainActivity extends AppCompatActivity /* implements View.OnClickLi
     private ImageView img;
     private Animation top, bootom;
 
+    private LottieAnimationView lottie;
+    private ImageView logo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        name = findViewById(R.id.name);
-        slogan = findViewById(R.id.slogan);
-        img = findViewById(R.id.logoImg);
+        lottie = findViewById(R.id.animationView);
+        logo= findViewById(R.id.circle);
 
-        top = AnimationUtils.loadAnimation(this, R.anim.top);
-        bootom = AnimationUtils.loadAnimation(this, R.anim.bottom);
+//        name = findViewById(R.id.name);
+//        slogan = findViewById(R.id.slogan);
+//        img = findViewById(R.id.logoImg);
+//
+        //top = AnimationUtils.loadAnimation(this, R.anim.top);
+//        bootom = AnimationUtils.loadAnimation(this, R.anim.bottom);
+//
+//        img.setAnimation(top);
+//        name.setAnimation(bootom);
+//        slogan.setAnimation(bootom);
 
-        img.setAnimation(top);
-        name.setAnimation(bootom);
-        slogan.setAnimation(bootom);
+
+        //logo.setAnimation(top);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 Intent i = new Intent(MainActivity.this, Login.class);
-                Pair[] pairs = new Pair[2];
-                pairs[0]= new Pair<View,String>(img, "logo_img");
-                pairs[1]= new Pair<View,String>(name, "logo_txt");
+//                Pair[] pairs = new Pair[2];
+//                pairs[0]= new Pair<View,String>(logo, "logo_img");
+//               pairs[1]= new Pair<View,String>(name, "logo_txt");
 
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, pairs);
-                startActivity(i, options.toBundle());
+                //ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, findViewById(R.id.logo), "logo_img");
+                //startActivity(i, options.toBundle());
+                startActivity(i);
             }
-        }, 2200);
+        }, 4100);
 
 //        root = FirebaseDatabase.getInstance();
 //        users_reference = root.getReference("Users");

@@ -7,13 +7,14 @@
     tools:context=".SignUp"
     android:orientation="vertical"
     android:background="#fff"
-    android:padding="20dp">
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
 
     <ImageView
         android:id="@+id/logo_image"
-        android:layout_width="270dp"
-        android:layout_height="190dp"
-        android:src="@drawable/chess_logo"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:src="@drawable/chess_logo_orange"
         android:transitionName="logo_img"></ImageView>
 
     <TextView
@@ -25,7 +26,7 @@
         android:id="@+id/logo_name"
         android:transitionName="logo_txt"
         android:textColor="#0D245D"
-        android:layout_marginTop="-40dp"></TextView>
+        android:layout_marginTop="-70dp"></TextView>
 
     <TextView
         android:layout_width="wrap_content"
@@ -153,7 +154,7 @@
         android:id="@+id/go"
         android:textColor="@color/white"
         android:fontFamily="@font/impacted"
-        android:backgroundTint="#0D3A82"
+        android:backgroundTint="#101820"
         android:textSize="25dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp">

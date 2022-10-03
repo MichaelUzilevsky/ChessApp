@@ -3,14 +3,17 @@ package com.example.chess;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +31,7 @@ public class Login extends AppCompatActivity {
     private TextInputLayout username, password;
     private DatabaseReference users_reference;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +46,8 @@ public class Login extends AppCompatActivity {
 
 //        username.getEditText().addTextChangedListener(new ValidationTextWatcher(username));
 //        password.getEditText().addTextChangedListener(new ValidationTextWatcher(password));
+
+
 
         Intent intent_signUp = getIntent();
         if(intent_signUp!= null){
