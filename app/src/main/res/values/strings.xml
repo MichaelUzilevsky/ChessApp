@@ -2,4 +2,9 @@
     <string name="app_name">Chess</string>
     <string name="mobile_chess">Mobile Chess</string>
     <string name="hello_there_welcome_back">hello there, welcome back</string>
+    <string name="choose_your_game_option">Choose your game option</string>
+    <string name="with_a_friend">with a Friend</string>
+    <string name="choose_the_nmode_you_want_to_play">choose the \nmode you want to play</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">close navigation drawer</string>
 </resources>

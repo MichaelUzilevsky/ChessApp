@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:gravity="top"
+    android:orientation="vertical"
+    android:background="#0D245D"
+    android:padding="22dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#0D245D">
+
+        <ImageView
+            android:id="@+id/profile_image"
+            android:layout_width="80dp"
+            android:layout_height="200dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/chess_header_blue"></ImageView>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/profile_image">
+
+            <TextView
+                android:id="@+id/header_username_labal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/baloo"
+                android:text="michael1"
+                android:textColor="@color/white"
+                android:textSize="35sp"></TextView>
+
+            <TextView
+                android:id="@+id/header_name_labal"
+                android:layout_below="@+id/header_username_labal"
+                android:layout_marginTop="-5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/baloo_bhai_2"
+                android:text="Michael Uzilevsky"
+                android:textColor="@color/white"
+                android:textSize="20sp"></TextView>
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

@@ -1,21 +1,16 @@
 package com.example.chess;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -29,13 +24,15 @@ public class Login extends AppCompatActivity {
     private Button login, toSignUp;
     private TextView main, slogan;
     private TextInputLayout username, password;
-    private DatabaseReference users_reference;
+    private SharedPreferences sharedPreferences;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        sharedPreferences = getSharedPreferences("User_Data", 0);
 
         main = findViewById(R.id.logo_name);
         slogan = findViewById(R.id.slogan_name);
@@ -44,13 +41,8 @@ public class Login extends AppCompatActivity {
         login = findViewById(R.id.go);
         toSignUp = findViewById(R.id.toOther);
 
-//        username.getEditText().addTextChangedListener(new ValidationTextWatcher(username));
-//        password.getEditText().addTextChangedListener(new ValidationTextWatcher(password));
-
-
-
         Intent intent_signUp = getIntent();
-        if(intent_signUp!= null){
+        if (intent_signUp != null) {
             String intent_username = intent_signUp.getStringExtra("username");
             String intent_password = intent_signUp.getStringExtra("password");
 
@@ -59,29 +51,27 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    private Boolean validateUsername(){
+    private Boolean validateUsername() {
         String val = username.getEditText().getText().toString().trim();
-        if(val.isEmpty()) {
+        if (val.isEmpty()) {
             username.setError("Filed cannot be empty");
             return false;
-        }
-        else {
+        } else {
             username.setError(null);
             username.setErrorEnabled(false);
-            return  true;
+            return true;
         }
     }
 
-    private Boolean validatePassword(){
+    private Boolean validatePassword() {
         String val = password.getEditText().getText().toString().trim();
-        if(val.isEmpty()) {
+        if (val.isEmpty()) {
             password.setError("Filed cannot be empty");
             return false;
-        }
-        else {
+        } else {
             password.setError(null);
             password.setErrorEnabled(false);
-            return  true;
+            return true;
         }
     }
 
@@ -101,7 +91,7 @@ public class Login extends AppCompatActivity {
     }
 
     public void loginUser(View view) {
-        if(!validatePassword() | !validateUsername())
+        if (!validatePassword() | !validateUsername())
             return;
         else {
             isUser();
@@ -112,19 +102,18 @@ public class Login extends AppCompatActivity {
         String userEnterd_username = username.getEditText().getText().toString().trim();
         String userEntered_password = password.getEditText().getText().toString().trim();
 
-        users_reference = FirebaseDatabase.getInstance().getReference("Users");
-
+        DatabaseReference users_reference = FirebaseDatabase.getInstance().getReference("Users");
         Query checkUser = users_reference.orderByChild("username").equalTo(userEnterd_username);
+
         checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                if(snapshot.exists()){
+                if (snapshot.exists()) {
                     username.setError(null);
                     username.setErrorEnabled(false);
                     String password_DB = snapshot.child(userEnterd_username).child("password").getValue().toString();
 
-                    if(password_DB.equals(userEntered_password)){
+                    if (password_DB.equals(userEntered_password)) {
 
                         password.setError(null);
                         password.setErrorEnabled(false);
@@ -134,21 +123,27 @@ public class Login extends AppCompatActivity {
                         String email_DB = snapshot.child(userEnterd_username).child("email").getValue().toString();
                         String phone_DB = snapshot.child(userEnterd_username).child("phone").getValue().toString();
 
-                        Intent intent = new Intent(Login.this, UserProfile.class);
-                        intent.putExtra("name", fullname_DB);
-                        intent.putExtra("username", username_DB);
-                        intent.putExtra("email", email_DB);
-                        intent.putExtra("phone", phone_DB);
-                        intent.putExtra("password", password_DB);
+                        Intent intent = new Intent(Login.this, GameOptions.class);
+//                        intent.putExtra("name", fullname_DB);
+//                        intent.putExtra("username", username_DB);
+//                        intent.putExtra("email", email_DB);
+//                        intent.putExtra("phone", phone_DB);
+//                        intent.putExtra("password", password_DB);
+
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("name", fullname_DB);
+                        editor.putString("username", username_DB);
+                        editor.putString("email", email_DB);
+                        editor.putString("phone", phone_DB);
+                        editor.putString("password", password_DB);
+                        editor.apply();
 
                         startActivity(intent);
-                    }
-                    else{
+                    } else {
                         password.setError("Wrong PassWord");
                         password.requestFocus();
                     }
-                }
-                else{
+                } else {
                     username.setError("Username doesn't exists");
                     password.requestFocus();
                 }
@@ -159,29 +154,5 @@ public class Login extends AppCompatActivity {
 
             }
         });
-
-    }
-
-    private class ValidationTextWatcher implements TextWatcher {
-        private View view;
-        private ValidationTextWatcher(View view) {
-            this.view = view;
-        }
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        }
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        }
-        public void afterTextChanged(Editable editable) {
-            switch (view.getId()) {
-
-                case R.id.username:
-                    validateUsername();
-                    break;
-
-                case R.id.password:
-                    validatePassword();
-                    break;
-            }
-        }
     }
 }

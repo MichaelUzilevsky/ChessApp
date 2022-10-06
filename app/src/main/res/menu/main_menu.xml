@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_game"
+            android:icon="@drawable/console"
+            android:title="Game Modes" />
+        <item
+            android:id="@+id/nav_online"
+            android:icon="@drawable/online"
+            android:title="Online Game" />
+        <item
+            android:id="@+id/nav_regular"
+            android:icon="@drawable/vs"
+            android:title="1v1" />
+    </group>
+
+
+    <item android:title="Profile">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_profile"
+                    android:icon="@drawable/user"
+                    android:title="Profile" />
+                <item
+                    android:id="@+id/nav_login"
+                    android:icon="@drawable/login"
+                    android:title="Login" />
+                <item
+                    android:id="@+id/nav_signup"
+                    android:icon="@drawable/signup"
+                    android:title="Sign Up" />
+            </group>
+        </menu>
+    </item>
+
+</menu>

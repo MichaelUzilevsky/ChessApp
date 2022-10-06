@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Login"
-    android:orientation="vertical"
     android:background="#fff"
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
     android:paddingRight="20dp"
-    android:paddingLeft="20dp">
+    tools:context=".Login">
 
     <ImageView
         android:id="@+id/logo_image"
@@ -21,23 +21,22 @@
         android:id="@+id/logo_name"
         android:layout_width="wrap_content"
         android:layout_height="110dp"
+        android:layout_marginTop="-68dp"
         android:fontFamily="@font/bungee_regular"
         android:text="@string/hello_there_welcome_back"
         android:textColor="#0D245D"
-        android:layout_marginTop="-68dp"
-        android:transitionName="logo_txt"
-        android:textSize="40sp"></TextView>
+        android:textSize="40sp"
+        android:transitionName="logo_txt"></TextView>
 
     <TextView
         android:id="@+id/slogan_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="22dp"
-        android:transitionName="slogan"
+        android:fontFamily="@font/araboto_light"
         android:text="Sigh in to continue"
         android:textColor="#0D3A82"
-        android:fontFamily="@font/araboto_light">
-    </TextView>
+        android:textSize="22dp"
+        android:transitionName="slogan"></TextView>
 
     <LinearLayout
         android:id="@+id/stuff"
@@ -49,73 +48,70 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/username"
-            android:hint="Username"
-            app:boxStrokeColor="@color/black"
-            app:hintTextColor="@color/black"
-            android:textColorHint="@color/black"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:transitionName="username">
+            android:hint="Username"
+            android:textColorHint="@color/black"
+            android:transitionName="username"
+            app:boxStrokeColor="@color/black"
+            app:hintTextColor="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/password"
-            android:hint="Password"
-            app:boxStrokeColor="@color/black"
-            app:hintTextColor="@color/black"
-            android:textColorHint="@color/black"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:passwordToggleEnabled="true"
+            android:hint="Password"
+            android:textColorHint="@color/black"
             android:transitionName="password"
+            app:boxStrokeColor="@color/black"
+            app:hintTextColor="@color/black"
+            app:passwordToggleEnabled="true"
             app:passwordToggleTint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:inputType="textPassword"/>
+                android:inputType="textPassword"
+                android:textColor="@color/black" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/go"
-            android:transitionName="go_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Go"
-            android:onClick="loginUser"
-            android:textColor="@color/white"
-            android:fontFamily="@font/impacted"
-            android:backgroundTint="#101820"
-            android:textSize="25dp"
             android:layout_marginTop="25dp"
-            android:layout_marginBottom="5dp">
-        </Button>
+            android:layout_marginBottom="5dp"
+            android:backgroundTint="#101820"
+            android:fontFamily="@font/impacted"
+            android:onClick="loginUser"
+            android:text="Go"
+            android:textColor="@color/white"
+            android:textSize="25dp"
+            android:transitionName="go_btn"></Button>
 
         <Button
             android:id="@+id/toOther"
-            android:transitionName="toOther"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#00000000"
-            android:text="New User? Sign Up"
             android:layout_gravity="right"
-            android:textColor="@color/black"
+            android:layout_margin="5dp"
+            android:background="#00000000"
             android:elevation="0dp"
             android:fontFamily="@font/antic_regular"
-            android:layout_margin="5dp"
             android:onClick="toSignup"
-            >
-        </Button>
+            android:text="New User? Sign Up"
+            android:textColor="@color/black"
+            android:transitionName="toOther"></Button>
 
     </LinearLayout>
 </LinearLayout>
