@@ -1,11 +1,9 @@
 package com.example.chess;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Pair;
-import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.ImageView;
@@ -16,51 +14,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.airbnb.lottie.LottieAnimationView;
 
 public class MainActivity extends AppCompatActivity /* implements View.OnClickListener*/ {
-
-    private TextView name, slogan;
-    private ImageView img;
-    private Animation top, bootom;
-
-    private LottieAnimationView lottie;
-    private ImageView logo;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        lottie = findViewById(R.id.animationView);
-        logo= findViewById(R.id.circle);
+        LottieAnimationView lottie = findViewById(R.id.animationView);
+        ImageView circle = findViewById(R.id.circle);
+        ImageView logo = findViewById(R.id.logo);
 
-//        name = findViewById(R.id.name);
-//        slogan = findViewById(R.id.slogan);
-//        img = findViewById(R.id.logoImg);
-//
-        //top = AnimationUtils.loadAnimation(this, R.anim.top);
-//        bootom = AnimationUtils.loadAnimation(this, R.anim.bottom);
-//
-//        img.setAnimation(top);
-//        name.setAnimation(bootom);
-//        slogan.setAnimation(bootom);
+        SharedPreferences sharedPreferences = getSharedPreferences("User_Data", 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("name", "");
+        editor.putString("username", "");
+        editor.putString("email", "");
+        editor.putString("phone", "");
+        editor.putString("password", "");
+        editor.apply();
 
-
-        //logo.setAnimation(top);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent i = new Intent(MainActivity.this, Login.class);
-//                Pair[] pairs = new Pair[2];
-//                pairs[0]= new Pair<View,String>(logo, "logo_img");
-//               pairs[1]= new Pair<View,String>(name, "logo_txt");
-
-                //ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, findViewById(R.id.logo), "logo_img");
-                //startActivity(i, options.toBundle());
-                startActivity(i);
-            }
-        }, 4100);
-
+        splash();
 //        root = FirebaseDatabase.getInstance();
 //        users_reference = root.getReference("Users");
 //        board_reference = root.getReference("Board");
@@ -87,6 +60,29 @@ public class MainActivity extends AppCompatActivity /* implements View.OnClickLi
 //
 //        button.setOnClickListener(this);
     }
+
+    private void splash(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent i = new Intent(MainActivity.this, GameOptions.class);
+                startActivity(i);
+            }
+        }, 3540);
+    }
+
+    @Override
+    protected void onResume() {
+        splash();
+        super.onResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        splash();
+        super.onRestart();
+    }
+
 
 //    @Override
 //    public void onClick(View view) {

@@ -7,6 +7,7 @@
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
         motion:duration="4000"
+        motion:transitionDisable="true"
         motion:autoTransition="animateToEnd">
        <KeyFrameSet>
            <KeyAttribute
@@ -59,7 +60,7 @@
                android:alpha="10" />
            <KeyAttribute
                motion:motionTarget="@+id/circle"
-               motion:framePosition="100"
+               motion:framePosition="99"
                android:alpha="0" />
 
            <KeyAttribute
@@ -72,7 +73,7 @@
                android:alpha="0" />
            <KeyAttribute
                motion:motionTarget="@+id/animationView"
-               motion:framePosition="100"
+               motion:framePosition="99"
                android:alpha="0" />
 
            <KeyAttribute
@@ -105,7 +106,7 @@
                android:alpha="1"/>
            <KeyAttribute
                motion:motionTarget="@+id/logo"
-               motion:framePosition="100"
+               motion:framePosition="99"
                android:alpha="0" />
            <KeyAttribute
                motion:motionTarget="@+id/logo"
@@ -115,6 +116,26 @@
                motion:motionTarget="@+id/logo"
                motion:framePosition="88"
                android:alpha="0.4" />
+           <KeyAttribute
+               motion:motionTarget="@+id/circle"
+               motion:framePosition="0"
+               android:alpha="1" />
+           <KeyAttribute
+               motion:motionTarget="@+id/animationView"
+               motion:framePosition="0"
+               android:alpha="1" />
+           <KeyAttribute
+               motion:motionTarget="@+id/circle"
+               motion:framePosition="1000"
+               android:alpha="0.5" />
+           <KeyAttribute
+               motion:motionTarget="@+id/animationView"
+               motion:framePosition="100"
+               android:alpha="0" />
+           <KeyAttribute
+               motion:motionTarget="@+id/circle"
+               motion:framePosition="100"
+               android:alpha="0" />
        </KeyFrameSet>
         <OnSwipe motion:maxAcceleration="0.1" />
     </Transition>

@@ -118,26 +118,20 @@ public class Login extends AppCompatActivity {
                         password.setError(null);
                         password.setErrorEnabled(false);
 
-                        String fullname_DB = snapshot.child(userEnterd_username).child("name").getValue().toString();
+                        String name_DB = snapshot.child(userEnterd_username).child("name").getValue().toString();
                         String username_DB = snapshot.child(userEnterd_username).child("username").getValue().toString();
                         String email_DB = snapshot.child(userEnterd_username).child("email").getValue().toString();
                         String phone_DB = snapshot.child(userEnterd_username).child("phone").getValue().toString();
 
-                        Intent intent = new Intent(Login.this, GameOptions.class);
-//                        intent.putExtra("name", fullname_DB);
-//                        intent.putExtra("username", username_DB);
-//                        intent.putExtra("email", email_DB);
-//                        intent.putExtra("phone", phone_DB);
-//                        intent.putExtra("password", password_DB);
-
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("name", fullname_DB);
+                        editor.putString("name", name_DB);
                         editor.putString("username", username_DB);
                         editor.putString("email", email_DB);
                         editor.putString("phone", phone_DB);
                         editor.putString("password", password_DB);
                         editor.apply();
 
+                        Intent intent = new Intent(Login.this, GameOptions.class);
                         startActivity(intent);
                     } else {
                         password.setError("Wrong PassWord");

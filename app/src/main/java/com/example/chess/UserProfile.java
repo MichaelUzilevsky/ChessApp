@@ -58,14 +58,6 @@ public class UserProfile extends AppCompatActivity {
     }
 
     private void showUserData() {
-//        Intent intent = getIntent();
-//        _USERNAME = intent.getStringExtra("username");
-//        _PASSWORD = intent.getStringExtra("password");
-//        _EMAIL = intent.getStringExtra("email");
-//        _PHONE = intent.getStringExtra("phone");
-//        _NAME = intent.getStringExtra("name");
-
-        SharedPreferences.Editor editor = pref.edit();
         _USERNAME = pref.getString("username", null);
         _PASSWORD = pref.getString("password", null);
         _EMAIL = pref.getString("email", null);
@@ -87,6 +79,7 @@ public class UserProfile extends AppCompatActivity {
             Toast.makeText(this, "Invalid Data", Toast.LENGTH_SHORT).show();
         } else {
             checkIfExsistAndChange();
+            Toast.makeText(UserProfile.this, "Data Saved Successfully", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -140,10 +133,13 @@ public class UserProfile extends AppCompatActivity {
                 }
             });
 
-            //reference.child(_USERNAME).child("username").setValue(username.getEditText().getText().toString());
-
             _USERNAME = username.getEditText().getText().toString();
             username_label.setText(_USERNAME);
+
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("username", _USERNAME);
+            editor.apply();
+
             return true;
         }
 
@@ -155,8 +151,13 @@ public class UserProfile extends AppCompatActivity {
             return true;
 
         if (validateEmail()) {
-            reference.child(_USERNAME).child("password").setValue(password.getEditText().getText().toString());
+            reference.child(_USERNAME).child("email").setValue(email.getEditText().getText().toString());
             _EMAIL = email.getEditText().getText().toString();
+
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("email", _EMAIL);
+            editor.apply();
+
             return true;
         }
         return false;
@@ -169,6 +170,11 @@ public class UserProfile extends AppCompatActivity {
         if (validatePhone()) {
             reference.child(_USERNAME).child("phone").setValue(phone.getEditText().getText().toString());
             _PHONE = phone.getEditText().getText().toString();
+
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("phone", _PHONE);
+            editor.apply();
+
             return true;
         }
         return false;
@@ -182,6 +188,11 @@ public class UserProfile extends AppCompatActivity {
             reference.child(_USERNAME).child("name").setValue(fullName.getEditText().getText().toString());
             _NAME = fullName.getEditText().getText().toString();
             name_label.setText(_NAME);
+
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("name", _NAME);
+            editor.apply();
+
             return true;
         }
         return false;
@@ -194,6 +205,11 @@ public class UserProfile extends AppCompatActivity {
         if (validatePassword()) {
             reference.child(_USERNAME).child("password").setValue(password.getEditText().getText().toString());
             _PASSWORD = password.getEditText().getText().toString();
+
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("password", _PASSWORD);
+            editor.apply();
+
             return true;
         }
         return false;
