@@ -91,6 +91,7 @@
                     android:fontFamily="@font/baloo"
                     android:text="@string/with_a_friend"
                     android:textColor="@color/white"
+                    android:onClick="openDialog"
                     android:textSize="25dp"></Button>
 
                 <Button
