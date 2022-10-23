@@ -8,13 +8,18 @@
             android:icon="@drawable/console"
             android:title="Game Modes" />
         <item
+            android:id="@+id/nav_vsFriendOnline"
+            android:icon="@drawable/vs"
+            android:title="1 vs 1" />
+        <item
             android:id="@+id/nav_online"
             android:icon="@drawable/online"
-            android:title="Online Game" />
+            android:title="Play Online" />
         <item
             android:id="@+id/nav_regular"
-            android:icon="@drawable/vs"
-            android:title="1v1" />
+            android:icon="@drawable/vs_menu_local"
+            android:title="Play With a Friend" />
+
     </group>
 
 

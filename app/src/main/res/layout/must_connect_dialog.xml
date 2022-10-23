@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="400dp"
     app:cardCornerRadius="20dp"
-    android:layout_height="300dp"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:background="@color/white">
 
@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:backgroundTint="@color/white"
-        app:cardCornerRadius="20dp">
+        app:cardCornerRadius="20dp"
+        android:layout_margin="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,36 +28,31 @@
                 android:layout_gravity="center"
                 android:fontFamily="@font/bungee_regular"
                 android:includeFontPadding="false"
-                android:text="Enter the game code"
+                android:text="you must sign in to start playing"
                 android:textColor="#0D245D"
-                android:textSize="50sp"></TextView>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/code"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:hint="Game Code"
-                android:textColorHint="@color/black"
-                app:boxStrokeColor="@color/black"
-                app:hintTextColor="@color/black">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginBottom="30dp"
+                android:textSize="35sp"></TextView>
 
             <Button
-                android:id="@+id/play"
+                android:id="@+id/toLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#101820"
                 android:fontFamily="@font/baloo"
-                android:onClick="start_new_game"
-                android:text="play"
+                android:onClick="toLoginFromGame"
+                android:text="login"
+                android:layout_marginBottom="15dp"
+                android:textColor="@color/white"
+                android:textSize="20dp"></Button>
+
+            <Button
+                android:id="@+id/toSignup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#101820"
+                android:fontFamily="@font/baloo"
+                android:onClick="toSignUpFromGame"
+                android:text="sign up"
                 android:textColor="@color/white"
                 android:textSize="20dp"></Button>
 

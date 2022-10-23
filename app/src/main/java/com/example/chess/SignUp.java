@@ -10,7 +10,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +35,6 @@ public class SignUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-
         main = findViewById(R.id.logo_name);
         slogan = findViewById(R.id.slogan_name);
         regUsername = findViewById(R.id.username);
@@ -45,7 +46,7 @@ public class SignUp extends AppCompatActivity {
         toSignUp = findViewById(R.id.toOther);
 
         root = FirebaseDatabase.getInstance();
-        users_reference = root.getReference();
+        users_reference = root.getReference().child("Users");
         username_reference = root.getReference().child("Users");
 
         regFullName.getEditText().addTextChangedListener(new ValidationTextWatcher(regFullName));
@@ -164,6 +165,7 @@ public class SignUp extends AppCompatActivity {
         pairs[3] = new Pair<View, String>(regPassword, "password");
         pairs[4] = new Pair<View, String>(signup, "go_btn");
         pairs[5] = new Pair<View, String>(toSignUp, "toOther");
+
 
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SignUp.this, pairs);
         startActivity(new Intent(SignUp.this, Login.class), options.toBundle());

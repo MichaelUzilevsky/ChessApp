@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00000000">
+
+    <RelativeLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+        <LinearLayout
+            android:id="@+id/oppoLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="50dp"
+            android:layout_marginStart="20dp">
+            
+            <TextView
+                android:id="@+id/oppoMsg"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:background="@drawable/msg_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#272727"
+                android:textSize="17dp"
+                android:text="opponent message"/>
+            
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_alignParentEnd="true"
+            android:id="@+id/myLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="20dp">
+
+            <TextView
+                android:id="@+id/myMsg"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:background="@drawable/my_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="17dp"
+                android:text="my message"
+                />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

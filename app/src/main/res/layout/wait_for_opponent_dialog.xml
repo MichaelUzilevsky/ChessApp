@@ -25,12 +25,23 @@
             android:textColor="#0D245D"
             android:textSize="32sp"></TextView>
 
+        <TextView
+            android:id="@+id/gameCodeTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/baloo"
+            android:includeFontPadding="false"
+            android:text="the Game Code is: "
+            android:textAlignment="center"
+            android:textColor="#0D245D"
+            android:textSize="25sp"></TextView>
+
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/hourglass"
             android:layout_width="250dp"
             android:layout_height="300dp"
-            android:layout_marginTop="-60dp"
             android:layout_gravity="center"
+            android:layout_marginTop="-75dp"
             android:elevation="3dp"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"

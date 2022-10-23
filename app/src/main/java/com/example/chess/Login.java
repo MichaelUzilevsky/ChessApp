@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -31,7 +32,6 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         sharedPreferences = getSharedPreferences("User_Data", 0);
 
         main = findViewById(R.id.logo_name);
@@ -40,7 +40,6 @@ public class Login extends AppCompatActivity {
         password = findViewById(R.id.password);
         login = findViewById(R.id.go);
         toSignUp = findViewById(R.id.toOther);
-
         Intent intent_signUp = getIntent();
         if (intent_signUp != null) {
             String intent_username = intent_signUp.getStringExtra("username");
