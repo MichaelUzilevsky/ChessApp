@@ -4,13 +4,13 @@
     android:layout_height="120dp"
     android:gravity="top"
     android:orientation="vertical"
-    android:background="#0D245D"
+    android:background="@color/mainRed"
     android:padding="0dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:background="#0D245D">
+        android:background="@color/mainRed">
 
         <ImageView
             android:id="@+id/profile_image"
@@ -18,7 +18,7 @@
             android:layout_height="100dp"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/chess_logo_orange_removedbg"></ImageView>
+            android:src="@drawable/chess_chick_logo"></ImageView>
 
 <!--        <RelativeLayout-->
 <!--            android:layout_width="wrap_content"-->

@@ -12,56 +12,56 @@
        <KeyFrameSet>
            <KeyAttribute
                motion:motionTarget="@+id/circle"
-               motion:framePosition="75"
-               android:scaleX="1" />
-           <KeyAttribute
-               motion:motionTarget="@+id/circle"
-               motion:framePosition="75"
-               android:scaleY="1" />
-           <KeyAttribute
-               motion:motionTarget="@+id/circle"
-               motion:framePosition="0"
-               android:scaleX="1" />
-           <KeyAttribute
-               motion:motionTarget="@+id/circle"
-               motion:framePosition="0"
-               android:scaleY="1" />
-           <KeyAttribute
-               motion:motionTarget="@+id/circle"
-               motion:framePosition="38"
-               android:scaleX="8" />
-           <KeyAttribute
-               motion:motionTarget="@+id/circle"
-               motion:framePosition="38"
-               android:scaleY="8" />
-           <KeyAttribute
-               motion:motionTarget="@+id/circle"
-               motion:framePosition="19"
+               motion:framePosition="80"
                android:scaleX="4" />
            <KeyAttribute
                motion:motionTarget="@+id/circle"
-               motion:framePosition="19"
+               motion:framePosition="80"
                android:scaleY="4" />
            <KeyAttribute
                motion:motionTarget="@+id/circle"
-               motion:framePosition="57"
+               motion:framePosition="0"
+               android:scaleX="8" />
+           <KeyAttribute
+               motion:motionTarget="@+id/circle"
+               motion:framePosition="0"
+               android:scaleY="8" />
+           <KeyAttribute
+               motion:motionTarget="@+id/circle"
+               motion:framePosition="40"
+               android:scaleX="1" />
+           <KeyAttribute
+               motion:motionTarget="@+id/circle"
+               motion:framePosition="40"
+               android:scaleY="1" />
+           <KeyAttribute
+               motion:motionTarget="@+id/circle"
+               motion:framePosition="20"
+               android:scaleX="4" />
+           <KeyAttribute
+               motion:motionTarget="@+id/circle"
+               motion:framePosition="20"
+               android:scaleY="4" />
+           <KeyAttribute
+               motion:motionTarget="@+id/circle"
+               motion:framePosition="60"
                android:scaleY="2" />
            <KeyAttribute
                motion:motionTarget="@+id/circle"
-               motion:framePosition="57"
+               motion:framePosition="60"
                android:scaleX="2" />
            <KeyAttribute
                motion:motionTarget="@+id/circle"
                motion:framePosition="85"
-               android:alpha="0" />
+               android:alpha="1" />
            <KeyAttribute
                motion:motionTarget="@+id/circle"
                motion:framePosition="75"
-               android:alpha="10" />
+               android:alpha="1" />
            <KeyAttribute
                motion:motionTarget="@+id/circle"
                motion:framePosition="99"
-               android:alpha="0" />
+               android:alpha="1" />
 
            <KeyAttribute
                motion:motionTarget="@+id/animationView"
@@ -107,11 +107,11 @@
            <KeyAttribute
                motion:motionTarget="@+id/logo"
                motion:framePosition="99"
-               android:alpha="0" />
+               android:alpha="1" />
            <KeyAttribute
                motion:motionTarget="@+id/logo"
                motion:framePosition="97"
-               android:alpha="0.7" />
+               android:alpha="1" />
            <KeyAttribute
                motion:motionTarget="@+id/logo"
                motion:framePosition="88"
@@ -135,7 +135,15 @@
            <KeyAttribute
                motion:motionTarget="@+id/circle"
                motion:framePosition="100"
-               android:alpha="0" />
+               android:alpha="1" />
+           <KeyAttribute
+               motion:motionTarget="@+id/circle"
+               motion:framePosition="100"
+               android:scaleX="8" />
+           <KeyAttribute
+               motion:motionTarget="@+id/circle"
+               motion:framePosition="100"
+               android:scaleY="8" />
        </KeyFrameSet>
         <OnSwipe motion:maxAcceleration="0.1" />
     </Transition>

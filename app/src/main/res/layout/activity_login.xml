@@ -8,29 +8,45 @@
     tools:context=".Login">
 
     <LinearLayout
+        android:id="@+id/loginWave"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/mainBlack"
+        android:elevation="-15dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:transitionName="wave"></LinearLayout>
+
+    <ImageView
+        android:id="@+id/logo_image"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:src="@drawable/chess_chick_logo_txt"
+        android:transitionName="logo_img"></ImageView>
+
+    <LinearLayout
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/loginWave"
         android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp">
-
-        <ImageView
-            android:id="@+id/logo_image"
-            android:layout_width="300dp"
-            android:layout_height="200dp"
-            android:src="@drawable/chess_logo_orange_removedbg"
-            android:transitionName="logo_img"></ImageView>
+        android:paddingStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="15dp">
 
         <TextView
             android:id="@+id/logo_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-40dp"
             android:fontFamily="@font/bungee_regular"
             android:includeFontPadding="false"
-            android:text="welcome back"
+            android:text="Login"
             android:textColor="#0D245D"
-            android:textSize="40sp"
+            android:textSize="90dp"
             android:transitionName="logo_txt"></TextView>
 
         <TextView
@@ -38,16 +54,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/araboto_light"
-            android:text="Sigh in to continue"
-            android:textColor="#0D3A82"
-            android:textSize="22dp"
+            android:text="Login to continue"
+            android:textColor="@color/secondBlue"
+            android:textSize="25dp"
             android:transitionName="slogan"></TextView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/loginStuff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
 
         <LinearLayout
             android:id="@+id/stuff"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             android:orientation="vertical">
 
@@ -119,18 +146,202 @@
                 android:transitionName="toOther"></Button>
 
         </LinearLayout>
+
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/mainBlack"
+        android:padding="2dp"
+        android:layout_alignParentBottom="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ll_second"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/f1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/white"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toStartOf="@+id/f2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/f2"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/mainBlack"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toStartOf="@+id/f3"
+                app:layout_constraintStart_toEndOf="@+id/f1"
+                app:layout_constraintTop_toTopOf="parent"></FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/f3"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/white"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toStartOf="@+id/f4"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/f4"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/mainBlack"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toStartOf="@+id/f5"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/f5"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/white"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"></FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/f11"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/mainBlack"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toStartOf="@+id/f21"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/f21"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/white"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toStartOf="@+id/f31"
+                app:layout_constraintStart_toEndOf="@+id/f11"
+                app:layout_constraintTop_toTopOf="parent"></FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/f31"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/mainBlack"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toStartOf="@+id/f41"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/f41"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/white"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toStartOf="@+id/f51"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/f51"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/mainBlack"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"></FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/f111"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/white"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toStartOf="@+id/f211"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/f211"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/mainBlack"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toStartOf="@+id/f311"
+                app:layout_constraintStart_toEndOf="@+id/f111"
+                app:layout_constraintTop_toTopOf="parent"></FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/f311"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/white"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toStartOf="@+id/f411"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/f411"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/mainBlack"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toStartOf="@+id/f511"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/f511"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/white"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"></FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/loginWave"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginStuff"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/wave_background"
-        android:elevation="-15dp"
-        android:orientation="vertical"
-        android:transitionName="wave"></LinearLayout>
-
+        android:background="@drawable/gradient"></LinearLayout>
 
 </RelativeLayout>

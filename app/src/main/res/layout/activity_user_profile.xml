@@ -11,7 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:background="#FF7422"
+        android:background="@color/mainRed"
         android:padding="20dp">
 
         <ImageView
@@ -59,15 +59,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-100dp"
-        android:padding="20dp">
+        android:layout_marginTop="-80dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        >
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="0dp"
             android:layout_height="125dp"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            app:cardBackgroundColor="#0D245D"
+            app:cardBackgroundColor="@color/mainBlack"
             app:cardElevation="10dp">
 
             <RelativeLayout
@@ -114,7 +116,7 @@
             android:layout_height="125dp"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            app:cardBackgroundColor="#0D245D"
+            app:cardBackgroundColor="@color/mainBlack"
             app:cardElevation="10dp">
 
             <RelativeLayout
@@ -126,7 +128,7 @@
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/game_pad"></ImageView>
+                    android:src="@drawable/game_controller"></ImageView>
 
                 <TextView
                     android:id="@+id/games_played_label"
@@ -161,7 +163,7 @@
             android:layout_height="125dp"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            app:cardBackgroundColor="#0D245D"
+            app:cardBackgroundColor="@color/mainBlack"
             app:cardElevation="10dp">
 
             <RelativeLayout
@@ -208,9 +210,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-40dp"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fullname"
