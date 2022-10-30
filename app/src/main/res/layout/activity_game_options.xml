@@ -74,8 +74,8 @@
             android:id="@+id/buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_below="@+id/txt">
+            android:layout_below="@+id/txt"
+            android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/firstRow"
@@ -91,11 +91,11 @@
                     android:layout_height="0dp"
                     android:layout_marginEnd="2.5dp"
                     android:background="@drawable/button_shape"
+                    android:onClick="open_join_create_game_Dialog"
                     app:layout_constraintDimensionRatio="H,1:1"
                     app:layout_constraintEnd_toStartOf="@+id/playOnline_Random"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:onClick="open_join_create_game_Dialog">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -207,7 +207,7 @@
                             android:layout_marginTop="20dp"
                             android:layout_marginEnd="5dp"
                             android:layout_marginBottom="5dp"
-                            android:src="@drawable/vs_card_local" />
+                            android:src="@drawable/vs_friend_icon" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -226,6 +226,7 @@
                 </FrameLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </LinearLayout>
 
@@ -420,7 +421,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="350dp"
             android:layout_below="@+id/buttons"
             android:background="@drawable/gradient"
             android:layout_alignParentBottom="true">
