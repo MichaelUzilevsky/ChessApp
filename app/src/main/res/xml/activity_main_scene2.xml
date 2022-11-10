@@ -10,14 +10,7 @@
         motion:transitionDisable="true"
         motion:autoTransition="animateToEnd">
        <KeyFrameSet>
-           <KeyAttribute
-               motion:motionTarget="@+id/circle"
-               motion:framePosition="80"
-               android:scaleX="4" />
-           <KeyAttribute
-               motion:motionTarget="@+id/circle"
-               motion:framePosition="80"
-               android:scaleY="4" />
+
            <KeyAttribute
                motion:motionTarget="@+id/circle"
                motion:framePosition="0"
@@ -26,30 +19,6 @@
                motion:motionTarget="@+id/circle"
                motion:framePosition="0"
                android:scaleY="8" />
-           <KeyAttribute
-               motion:motionTarget="@+id/circle"
-               motion:framePosition="40"
-               android:scaleX="1" />
-           <KeyAttribute
-               motion:motionTarget="@+id/circle"
-               motion:framePosition="40"
-               android:scaleY="1" />
-           <KeyAttribute
-               motion:motionTarget="@+id/circle"
-               motion:framePosition="20"
-               android:scaleX="4" />
-           <KeyAttribute
-               motion:motionTarget="@+id/circle"
-               motion:framePosition="20"
-               android:scaleY="4" />
-           <KeyAttribute
-               motion:motionTarget="@+id/circle"
-               motion:framePosition="60"
-               android:scaleY="2" />
-           <KeyAttribute
-               motion:motionTarget="@+id/circle"
-               motion:framePosition="60"
-               android:scaleX="2" />
            <KeyAttribute
                motion:motionTarget="@+id/circle"
                motion:framePosition="85"
@@ -144,8 +113,17 @@
                motion:motionTarget="@+id/circle"
                motion:framePosition="100"
                android:scaleY="8" />
+           <KeyAttribute
+               motion:motionTarget="@+id/circle"
+               motion:framePosition="40"
+               android:scaleX="1.2" />
+           <KeyAttribute
+               motion:motionTarget="@+id/circle"
+               motion:framePosition="40"
+               android:scaleY="1.2" />
        </KeyFrameSet>
-        <OnSwipe motion:maxAcceleration="0.1" />
+        <OnSwipe motion:maxAcceleration="0.1"
+            motion:maxVelocity="0.1" />
     </Transition>
 
     <ConstraintSet android:id="@+id/start">
