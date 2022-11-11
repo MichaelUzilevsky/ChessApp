@@ -74,4 +74,12 @@ public class Pawn extends ChessPiece implements StraightSearch {
     public void move() {
         moved = true;
     }
+
+    public Boolean getMoved() {
+        return moved;
+    }
+
+    public void setMoved(Boolean moved) {
+        this.moved = moved;
+    }
 }

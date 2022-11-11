@@ -8,8 +8,10 @@ import java.util.ArrayList;
 
 public class Rook extends ChessPiece implements StraightSearch {
 
+    private boolean moved;
     public Rook(Position position, Color color) {
         super(position, color);
+        moved = false;
     }
 
     @Override
@@ -50,5 +52,18 @@ public class Rook extends ChessPiece implements StraightSearch {
     @Override
     public ArrayList<Position> legalMoves(Board board) {
         return straightSearch(board);
+    }
+
+    @Override
+    public void move() {
+        moved = true;
+    }
+
+    public boolean isMoved() {
+        return moved;
+    }
+
+    public void setMoved(boolean moved) {
+        this.moved = moved;
     }
 }
