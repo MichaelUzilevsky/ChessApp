@@ -1,5 +1,7 @@
 package com.example.chess.utils;
 
+import java.util.Objects;
+
 public class Position {
     private int pos_x, pos_y;
 
@@ -22,5 +24,20 @@ public class Position {
 
     public void setPos_y(int pos_y) {
         this.pos_y = pos_y;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Position position = (Position) o;
+        return pos_x == position.pos_x && pos_y == position.pos_y;
+    }
+
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pos_x, pos_y);
     }
 }

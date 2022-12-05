@@ -9,7 +9,8 @@ import java.util.ArrayList;
 
 public class King extends ChessPiece implements StraightSearch, DiagonalSearch {
 
-    public King(Position position, Color color) {
+    private boolean moved;
+    public King(Position position, PieceColor color) {
         super(position, color);
     }
 
@@ -18,19 +19,54 @@ public class King extends ChessPiece implements StraightSearch, DiagonalSearch {
         ArrayList<Position> positions = new ArrayList<>();
         int x = getPos_x(), y = getPos_y();
 
-        if ((kingSearch(x, y, 1, 1, board) != null)) {
-            positions.add(kingSearch(x, y, 1, 1, board));
+        for (int i = 1; i < 2; i++) {
+            if (inBoard(x + i, y + i, board.getSIZE())) {
+                if (board.isPiece(x + i, y + i) && board.getPiece(x + i, y + i).getColor() != this.color) {
+                    positions.add(new Position(x + i, y + i));
+                    break;
+                } else if (!board.isPiece(x + i, y + i))
+                    positions.add(new Position(x + i, y + i));
+                else if (board.isPiece(x + i, y + i) && board.getPiece(x + i, y + i).getColor() == this.color)
+                    break;
+            } else
+                break;
         }
-        if ((kingSearch(x, y, -1, -1, board) != null)) {
-            positions.add(kingSearch(x, y, -1, -1, board));
+        for (int i = 1; i < 2; i++) {
+            if (inBoard(x + i, y - i, board.getSIZE())) {
+                if (board.isPiece(x + i, y - i) && board.getPiece(x + i, y - i).getColor() != this.color) {
+                    positions.add(new Position(x - i, y - i));
+                    break;
+                } else if (!board.isPiece(x + i, y - i))
+                    positions.add(new Position(x + i, y - i));
+                else if (board.isPiece(x + i, y - i) && board.getPiece(x + i, y - i).getColor() == this.color)
+                    break;
+            } else
+                break;
         }
-        if ((kingSearch(x, y, 1, -1, board) != null)) {
-            positions.add(kingSearch(x, y, 1, -1, board));
+        for (int i = 1; i < 2; i++) {
+            if (inBoard(x - i, y + i, board.getSIZE())) {
+                if (board.isPiece(x - i, y + i) && board.getPiece(x - i, y + i).getColor() != this.color) {
+                    positions.add(new Position(x - i, y + i));
+                    break;
+                } else if (!board.isPiece(x - i, y + i))
+                    positions.add(new Position(x - i, y + i));
+                else if (board.isPiece(x - i, y + i) && board.getPiece(x - i, y + i).getColor() == this.color)
+                    break;
+            } else
+                break;
         }
-        if ((kingSearch(x, y, -1, 1, board) != null)) {
-            positions.add(kingSearch(x, y, -1, 1, board));
+        for (int i = 1; i < 2; i++) {
+            if (inBoard(x - i, y - i, board.getSIZE())) {
+                if (board.isPiece(x - i, y - i) && board.getPiece(x - i, y - i).getColor() != this.color) {
+                    positions.add(new Position(x - i, y - i));
+                    break;
+                } else if (!board.isPiece(x - i, y - i))
+                    positions.add(new Position(x - i, y - i));
+                else if (board.isPiece(x - i, y - i) && board.getPiece(x - i, y - i).getColor() == this.color)
+                    break;
+            } else
+                break;
         }
-
         return positions;
 
     }
@@ -40,17 +76,35 @@ public class King extends ChessPiece implements StraightSearch, DiagonalSearch {
         ArrayList<Position> positions = new ArrayList<>();
         int x = getPos_x(), y = getPos_y();
 
-        if ((kingSearch(x, y, 1, 0, board) != null)) {
-            positions.add(kingSearch(x, y, 1, 0, board));
+        // horizontal search
+
+        if (inBoard(x + 1, y, board.getSIZE())) {
+            if (board.isPiece(x + 1, y) && board.getPiece(x + 1, y).getColor() != this.color) {
+                positions.add(new Position(x + 1, y));
+            } else if (!board.isPiece(x + 1, y)) {
+                positions.add(new Position(x + 1, y));
+            }
         }
-        if ((kingSearch(x, y, 0, 1, board) != null)) {
-            positions.add(kingSearch(x, y, 0, 1, board));
+        if (inBoard(x - 1, y, board.getSIZE())) {
+            if (board.isPiece(x - 1, y) && board.getPiece(x - 1, y).getColor() != this.color) {
+                positions.add(new Position(x - 1, y));
+            } else if (!board.isPiece(x - 1, y)) {
+                positions.add(new Position(x - 1, y));
+            }
         }
-        if ((kingSearch(x, y, -1, 0, board) != null)) {
-            positions.add(kingSearch(x, y, -1, 0, board));
+        if (inBoard(x, y + 1, board.getSIZE())) {
+            if (board.isPiece(x, y + 1) && board.getPiece(x, y + 1).getColor() != this.color) {
+                positions.add(new Position(x, y + 1));
+            } else if (!board.isPiece(x, y + 1)) {
+                positions.add(new Position(x, y + 1));
+            }
         }
-        if ((kingSearch(x, y, 0, -1, board) != null)) {
-            positions.add(kingSearch(x, y, 0, -1, board));
+        if (inBoard(x, y - 1, board.getSIZE())) {
+            if (board.isPiece(x, y - 1) && board.getPiece(x, y - 1).getColor() != this.color) {
+                positions.add(new Position(x, y - 1));
+            } else if (!board.isPiece(x, y - 1)) {
+                positions.add(new Position(x, y - 1));
+            }
         }
 
         return positions;
@@ -71,5 +125,13 @@ public class King extends ChessPiece implements StraightSearch, DiagonalSearch {
         ArrayList<Position> s = straightSearch(board);
         d.addAll(s);
         return d;
+    }
+
+    @Override
+    public boolean movePiece(int x, int y, Board board) {
+        boolean b = super.movePiece(x, y, board);
+        if(b)
+            moved = true;
+        return b;
     }
 }

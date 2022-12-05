@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Knight extends ChessPiece implements KnightSearch {
 
-    public Knight(Position position, Color color) {
+    public Knight(Position position, PieceColor color) {
         super(position, color);
     }
 
@@ -54,8 +54,12 @@ public class Knight extends ChessPiece implements KnightSearch {
     private Position knightSearch(int pos_x, int pos_y, int x_move, int y_move, Board board) {
         int total_x = pos_x + x_move;
         int total_y = pos_y + y_move;
-        if (inBoard(total_x, total_y, board.getSIZE()) && board.getBoard()[total_x][total_y].getColor() != this.getColor()) {
-            return new Position(total_x, total_y);
+        if (inBoard(total_x, total_y, board.getSIZE())) {
+            if(board.isPiece(total_x,total_y) && board.getPiece(total_x, total_y).getColor() != this.getColor())
+                return new Position(total_x, total_y);
+            else if(!board.isPiece(total_x,total_y)){
+                return new Position(total_x, total_y);
+            }
         }
         return null;
     }

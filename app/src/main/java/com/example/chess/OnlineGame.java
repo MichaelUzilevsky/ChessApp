@@ -90,6 +90,8 @@ public class OnlineGame extends AppCompatActivity {
 
             }
         });
+
+
     }
 
     public void sendMessage(View view) {
