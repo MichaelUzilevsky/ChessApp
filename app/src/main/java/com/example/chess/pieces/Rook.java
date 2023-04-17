@@ -15,19 +15,19 @@ public class Rook extends ChessPiece implements StraightSearch {
     }
 
     @Override
-    public ArrayList<Position> straightSearch(Board board) {
+    public ArrayList<Position> straightSearch(Board board, ChessPiece[][] pieces) {
         ArrayList<Position> positions = new ArrayList<>();
         int x = getPos_x(), y = getPos_y();
 
         // vertical search
         for (int i = x + 1; i < board.getSIZE(); i++) {
             if (inBoard(i, y, board.getSIZE())) {
-                if (board.isPiece(i, y) && board.getPiece(i, y).getColor() == this.color)
+                if (board.isPiece(i, y, pieces) && board.getPiece(i, y, pieces).getColor() == this.color)
                     i = board.getSIZE() + 1;
-                else if (board.isPiece(i, y) && board.getPiece(i, y).getColor() != this.color) {
+                else if (board.isPiece(i, y, pieces) && board.getPiece(i, y, pieces).getColor() != this.color) {
                     positions.add(new Position(i, y));
                     i = board.getSIZE() + 1;
-                } else if (!board.isPiece(i, y)) {
+                } else if (!board.isPiece(i, y, pieces)) {
                     positions.add(new Position(i, y));
                 }
             }
@@ -35,12 +35,12 @@ public class Rook extends ChessPiece implements StraightSearch {
 
         for (int i = x - 1; i >= 0; i--) {
             if (inBoard(i, y, board.getSIZE())) {
-                if (board.isPiece(i, y) && board.getPiece(i, y).getColor() == this.color)
+                if (board.isPiece(i, y, pieces) && board.getPiece(i, y, pieces).getColor() == this.color)
                     i = -1;
-                else if (board.isPiece(i, y) && board.getPiece(i, y).getColor() != this.color) {
+                else if (board.isPiece(i, y, pieces) && board.getPiece(i, y, pieces).getColor() != this.color) {
                     positions.add(new Position(i, y));
                     i = -1;
-                } else if (!board.isPiece(i, y)) {
+                } else if (!board.isPiece(i, y, pieces)) {
                     positions.add(new Position(i, y));
                 }
             }
@@ -50,12 +50,12 @@ public class Rook extends ChessPiece implements StraightSearch {
         //horizontal search
         for (int i = y + 1; i < board.getSIZE(); i++) {
             if (inBoard(x, i, board.getSIZE())) {
-                if (board.isPiece(x, i) && board.getPiece(x, i).getColor() == this.color)
+                if (board.isPiece(x, i, pieces) && board.getPiece(x, i, pieces).getColor() == this.color)
                     i = board.getSIZE() +1;
-                else if (board.isPiece(x, i) && board.getPiece(x, i).getColor() != this.color) {
+                else if (board.isPiece(x, i, pieces) && board.getPiece(x, i, pieces).getColor() != this.color) {
                     positions.add(new Position(x, i));
                     i = board.getSIZE()+1;
-                } else if (!board.isPiece(x, i)) {
+                } else if (!board.isPiece(x, i, pieces)) {
                     positions.add(new Position(x, i));
                 }
             }
@@ -63,12 +63,12 @@ public class Rook extends ChessPiece implements StraightSearch {
 
         for (int i = y - 1; i >= 0; i--) {
             if (inBoard(x, i, board.getSIZE())) {
-                if (board.isPiece(x, i) && board.getPiece(x, i).getColor() == this.color)
+                if (board.isPiece(x, i, pieces) && board.getPiece(x, i, pieces).getColor() == this.color)
                     i = -1;
-                else if (board.isPiece(x, i) && board.getPiece(x, i).getColor() != this.color) {
+                else if (board.isPiece(x, i, pieces) && board.getPiece(x, i, pieces).getColor() != this.color) {
                     positions.add(new Position(x, i));
                     i = -1;
-                } else if (!board.isPiece(x, i)) {
+                } else if (!board.isPiece(x, i, pieces)) {
                     positions.add(new Position(x, i));
                 }
             }
@@ -78,13 +78,13 @@ public class Rook extends ChessPiece implements StraightSearch {
     }
 
     @Override
-    public ArrayList<Position> legalMoves(Board board) {
-        return straightSearch(board);
+    public ArrayList<Position> possibleMoves(Board board, ChessPiece[][] pieces) {
+        return straightSearch(board, pieces);
     }
 
     @Override
-    public boolean movePiece(int x, int y, Board board) {
-        boolean b = super.movePiece(x, y, board);
+    public boolean movePiece(int x, int y) {
+        boolean b = super.movePiece(x, y);
         if(b)
             moved = true;
         return b;

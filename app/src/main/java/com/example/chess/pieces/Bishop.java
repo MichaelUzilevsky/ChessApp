@@ -13,58 +13,54 @@ public class Bishop extends ChessPiece implements DiagonalSearch {
     }
 
     @Override
-    public ArrayList<Position> diagonalSearch(Board board) {
+    public ArrayList<Position> diagonalSearch(Board board, ChessPiece[][] chessPieces) {
         ArrayList<Position> positions = new ArrayList<>();
         int x = getPos_x(), y = getPos_y();
 
         for (int i = 1; i < board.getSIZE(); i++) {
             if (inBoard(x + i, y + i, board.getSIZE())) {
-                if (board.isPiece(x + i, y + i) && board.getPiece(x + i, y + i).getColor() != this.color) {
+                if (board.isPiece(x + i, y + i, chessPieces) && board.getPiece(x + i, y + i, chessPieces).getColor() != this.color) {
                     positions.add(new Position(x + i, y + i));
                     break;
-                }
-                else if (!board.isPiece(x + i, y + i))
+                } else if (!board.isPiece(x + i, y + i, chessPieces))
                     positions.add(new Position(x + i, y + i));
-                else if (board.isPiece(x + i, y + i) && board.getPiece(x + i, y + i).getColor() == this.color)
+                else if (board.isPiece(x + i, y + i, chessPieces) && board.getPiece(x + i, y + i, chessPieces).getColor() == this.color)
                     break;
             } else
                 break;
         }
         for (int i = 1; i < board.getSIZE(); i++) {
             if (inBoard(x + i, y - i, board.getSIZE())) {
-                if (board.isPiece(x + i, y - i) && board.getPiece(x + i, y - i).getColor() != this.color) {
-                    positions.add(new Position(x - i, y - i));
-                    break;
-                }
-                else if (!board.isPiece(x + i, y - i))
+                if (board.isPiece(x + i, y - i, chessPieces) && board.getPiece(x + i, y - i, chessPieces).getColor() != this.color) {
                     positions.add(new Position(x + i, y - i));
-                else if (board.isPiece(x + i, y - i) && board.getPiece(x + i, y - i).getColor() == this.color)
+                    break;
+                } else if (!board.isPiece(x + i, y - i, chessPieces))
+                    positions.add(new Position(x + i, y - i));
+                else if (board.isPiece(x + i, y - i, chessPieces) && board.getPiece(x + i, y - i, chessPieces).getColor() == this.color)
                     break;
             } else
                 break;
         }
         for (int i = 1; i < board.getSIZE(); i++) {
             if (inBoard(x - i, y + i, board.getSIZE())) {
-                if (board.isPiece(x - i, y + i) && board.getPiece(x - i, y + i).getColor() != this.color) {
+                if (board.isPiece(x - i, y + i, chessPieces) && board.getPiece(x - i, y + i, chessPieces).getColor() != this.color) {
                     positions.add(new Position(x - i, y + i));
                     break;
-                }
-                else if (!board.isPiece(x - i, y + i))
+                } else if (!board.isPiece(x - i, y + i, chessPieces))
                     positions.add(new Position(x - i, y + i));
-                else if (board.isPiece(x - i, y + i) && board.getPiece(x - i, y + i).getColor() == this.color)
+                else if (board.isPiece(x - i, y + i, chessPieces) && board.getPiece(x - i, y + i, chessPieces).getColor() == this.color)
                     break;
             } else
                 break;
         }
         for (int i = 1; i < board.getSIZE(); i++) {
             if (inBoard(x - i, y - i, board.getSIZE())) {
-                if (board.isPiece(x - i, y - i) && board.getPiece(x - i, y - i).getColor() != this.color) {
+                if (board.isPiece(x - i, y - i, chessPieces) && board.getPiece(x - i, y - i, chessPieces).getColor() != this.color) {
                     positions.add(new Position(x - i, y - i));
                     break;
-                }
-                else if (!board.isPiece(x - i, y - i))
+                } else if (!board.isPiece(x - i, y - i, chessPieces))
                     positions.add(new Position(x - i, y - i));
-                else if (board.isPiece(x - i, y - i) && board.getPiece(x - i, y - i).getColor() == this.color)
+                else if (board.isPiece(x - i, y - i, chessPieces) && board.getPiece(x - i, y - i, chessPieces).getColor() == this.color)
                     break;
             } else
                 break;
@@ -73,8 +69,8 @@ public class Bishop extends ChessPiece implements DiagonalSearch {
     }
 
     @Override
-    public ArrayList<Position> legalMoves(Board board) {
-        return diagonalSearch(board);
+    public ArrayList<Position> possibleMoves(Board board, ChessPiece[][] chessPieces) {
+        return diagonalSearch(board, chessPieces);
     }
 
 }

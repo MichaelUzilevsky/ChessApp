@@ -98,29 +98,30 @@ public class Login extends AppCompatActivity {
     }
 
     private void isUser() {
-        String userEnterd_username = username.getEditText().getText().toString().trim();
+        String userEntered_username = username.getEditText().getText().toString().trim();
         String userEntered_password = password.getEditText().getText().toString().trim();
 
         DatabaseReference users_reference = FirebaseDatabase.getInstance().getReference("Users");
-        Query checkUser = users_reference.orderByChild("username").equalTo(userEnterd_username);
 
-        checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
+        users_reference.child(userEntered_username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     username.setError(null);
                     username.setErrorEnabled(false);
-                    String password_DB = snapshot.child(userEnterd_username).child("password").getValue().toString();
+                    String password_DB = snapshot.child("password").getValue().toString();
 
                     if (password_DB.equals(userEntered_password)) {
 
                         password.setError(null);
                         password.setErrorEnabled(false);
 
-                        String name_DB = snapshot.child(userEnterd_username).child("name").getValue().toString();
-                        String username_DB = snapshot.child(userEnterd_username).child("username").getValue().toString();
-                        String email_DB = snapshot.child(userEnterd_username).child("email").getValue().toString();
-                        String phone_DB = snapshot.child(userEnterd_username).child("phone").getValue().toString();
+                        String name_DB = snapshot.child("name").getValue().toString();
+                        String username_DB = snapshot.child("username").getValue().toString();
+                        String email_DB = snapshot.child("email").getValue().toString();
+                        String phone_DB = snapshot.child("phone").getValue().toString();
+                        String image_DB = snapshot.child("image").getValue().toString();
+                        int score_DB = snapshot.child("score").getValue(Integer.class);
 
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("name", name_DB);
@@ -128,10 +129,13 @@ public class Login extends AppCompatActivity {
                         editor.putString("email", email_DB);
                         editor.putString("phone", phone_DB);
                         editor.putString("password", password_DB);
+                        editor.putInt("score",score_DB);
+                        editor.putString("image", image_DB);
                         editor.apply();
 
                         Intent intent = new Intent(Login.this, GameOptions.class);
                         startActivity(intent);
+                        finish();
                     } else {
                         password.setError("Wrong PassWord");
                         password.requestFocus();

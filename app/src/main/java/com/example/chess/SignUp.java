@@ -10,11 +10,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -169,6 +166,7 @@ public class SignUp extends AppCompatActivity {
 
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SignUp.this, pairs);
         startActivity(new Intent(SignUp.this, Login.class), options.toBundle());
+        finish();
     }
 
     public void saveData(View view) {
@@ -190,7 +188,7 @@ public class SignUp extends AppCompatActivity {
                         String phone = regPhone.getEditText().getText().toString().trim();
                         String password = regPassword.getEditText().getText().toString().trim();
 
-                        User user = new User(name, username, email, phone, password);
+                        User user = new User(name, username, email, phone, password, "", 1000);
 
 
                         users_reference.child(regUsername.getEditText().getText().toString()).setValue(user);
@@ -210,7 +208,7 @@ public class SignUp extends AppCompatActivity {
                         intent.putExtra("username", regUsername.getEditText().getText().toString().trim());
                         intent.putExtra("password", regPassword.getEditText().getText().toString().trim());
 
-                        startActivity(intent, options.toBundle());;
+                        startActivity(intent, options.toBundle());
                     }
                     else {
                         regUsername.setError("Username is taken");

@@ -46,26 +46,41 @@ public abstract class ChessPiece {
         this.position = position;
     }
 
+    public ArrayList<Position> legalMoves(Board board, ChessPiece[][] pieces) {
+        ArrayList<Position> moves = possibleMoves(board, pieces);
+        Position[] positions = new Position[moves.size()];
+        positions = moves.toArray(positions);
+        for (int i = 0; i < positions.length; i++) {
+            if (!isMoveLegal(positions[i], board))
+                positions[i] = null;
+        }
+        return toList(positions);
+    }
 
-    public ArrayList<Position> legalMoves(Board board) {
+    public ArrayList<Position> possibleMoves(Board board, ChessPiece[][] pieces) {
         return null;
     }
 
-    public boolean movePiece(int x, int y, Board board) {
-        if (canMove(x, y, board)) {
-            this.setPos_x(x);
-            this.setPos_y(y);
-            return true;
+    public boolean movePiece(int x, int y) {
+        this.setPos_x(x);
+        this.setPos_y(y);
+        return true;
+    }
+
+    public boolean canMove(int x, int y, Board board, ChessPiece[][] pieces) {
+        return inLegalMove(x, y, board, pieces);
+    }
+
+    public boolean inLegalMove(int x, int y, Board board, ChessPiece[][] pieces) {
+        for (Position position : legalMoves(board, pieces)) {
+            if (position.equals(new Position(x, y)))
+                return true;
         }
         return false;
     }
 
-    public boolean canMove(int x, int y, Board board) {
-        return inLegalMove(x, y, board);
-    }
-
-    protected boolean inLegalMove(int x, int y, Board board) {
-        for (Position position : legalMoves(board)) {
+    public boolean inPossibleMoves(int x, int y, Board board, ChessPiece[][] pieces) {
+        for (Position position : possibleMoves(board, pieces)) {
             if (position.equals(new Position(x, y)))
                 return true;
         }
@@ -73,10 +88,22 @@ public abstract class ChessPiece {
     }
 
     protected Boolean inBoard(int x, int y, int size) {
-        if ((x < 0 || x > size - 1) || (y < 0 || y > size - 1)) {
-            return false;
-        }
-        return true;
+        return (x >= 0 && x <= size - 1) && (y >= 0 && y <= size - 1);
     }
 
+    public boolean isMoveLegal(Position pos, Board board) {
+        int move_x = pos.getPos_x(), move_y = pos.getPos_y();
+        if(!inBoard(move_x, move_y, board.getSIZE()))
+            return false;
+        return !board.checkCheckToColor(getPos_x(), getPos_y(), move_x, move_y, this.getColor());
+    }
+
+    public ArrayList<Position> toList(Position[] positions){
+        ArrayList<Position> mov = new ArrayList<Position>();
+        for (Position value : positions) {
+            if (value != null)
+                mov.add(value);
+        }
+        return mov;
+    }
 }

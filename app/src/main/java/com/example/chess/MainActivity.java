@@ -26,11 +26,14 @@ public class MainActivity extends AppCompatActivity /* implements View.OnClickLi
 
         SharedPreferences sharedPreferences = getSharedPreferences("User_Data", 0);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("name", "");
-        editor.putString("username", "");
-        editor.putString("email", "");
-        editor.putString("phone", "");
-        editor.putString("password", "");
+
+        editor.putBoolean("playing", false);
+        editor.putInt("whiteR", 232);
+        editor.putInt("whiteG", 231);
+        editor.putInt("whiteB", 208);
+        editor.putInt("blackR", 75);
+        editor.putInt("blackG", 115);
+        editor.putInt("blackB", 153);
         editor.apply();
 
         splash();
@@ -67,6 +70,7 @@ public class MainActivity extends AppCompatActivity /* implements View.OnClickLi
             public void run() {
                 Intent i = new Intent(MainActivity.this, GameOptions.class);
                 startActivity(i);
+                finish();
             }
         }, 3540);
     }

@@ -1,14 +1,17 @@
 package com.example.chess;
 
 public class User {
-    private String name, username, email, phone, password ;
+    private String name, username, email, phone, password, image;
+    private int score;
 
-    public User(String name, String username, String email, String phone, String password) {
+    public User(String name, String username, String email, String phone, String password, String image, int score) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.phone = phone;
         this.password = password;
+        this.image = image;
+        this.score = score;
     }
 
     public User(){
@@ -53,5 +56,21 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

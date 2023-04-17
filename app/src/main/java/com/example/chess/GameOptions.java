@@ -1,21 +1,26 @@
 package com.example.chess;
 
-import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
-import android.widget.AbsoluteLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,78 +30,58 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.example.chess.BoardDesign.Tile;
-import com.example.chess.game.Board;
-import com.example.chess.pieces.ChessPiece;
-import com.example.chess.pieces.PieceColor;
-import com.example.chess.utils.Position;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Random;
 
 public class GameOptions extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
-    private Dialog create_join, guest, gameCode, waitDialog;
-    private String username_sp;
+    private Dialog create_join, guest, gameCode, waitDialog, waitDialogOnline;
+    private String username_sp, image_sp;
+    private int score_val;
     private DatabaseReference available_codes, games;
-    private int width;
-    private final Tile[][] tiles = new Tile[8][8];
-    private final double CIRCLE_SIZE = 0.4;
-    private final int[] WHITE = new int[]{251, 253, 246};
-    private final int[] BLACK = new int[]{59, 164, 190};
-    private Board board;
-    private boolean pressed = false;
-    private int currentPiece_x, currentPiece_y;
-    private int count = 1;
+    private String[] colors = new String[]{"white", "black"};
+    private Random random = new Random();
+    private SharedPreferences sharedPreferences;
+    private LinearLayout loginButtons, guestButtons;
+    private RelativeLayout scoreContainer;
+    private TextView name, username, score;
+    private ImageView img;
+    private int REQUEST_CAMERA = 1, SELECT_FILE = 0;
 
-    private ImageView blackPawn_01, blackPawn_02, blackPawn_03, blackPawn_04, blackPawn_05, blackPawn_06, blackPawn_07, blackPawn_08,
-            blackRook_01, blackRook_02,
-            blackKnight_01, blackKnight_02,
-            blackBishop_01, blackBishop_02,
-            blackKing, blackQueen;
-
-    private ImageView whitePawn_01, whitePawn_02, whitePawn_03, whitePawn_04, whitePawn_05, whitePawn_06, whitePawn_07, whitePawn_08,
-            whiteRook_01, whiteRook_02,
-            whiteKnight_01, whiteKnight_02,
-            whiteBishop_01, whiteBishop_02,
-            whiteKing, whiteQueen;
-
-    private ImageView[][] white, black;
-
-    private ImageView possibleMove_01, possibleMove_02, possibleMove_03, possibleMove_04, possibleMove_05, possibleMove_06, possibleMove_07,
-            possibleMove_08, possibleMove_09, possibleMove_10, possibleMove_11, possibleMove_12, possibleMove_13, possibleMove_14,
-            possibleMove_15, possibleMove_16, possibleMove_17, possibleMove_18, possibleMove_19, possibleMove_20, possibleMove_21,
-            possibleMove_22, possibleMove_23, possibleMove_24, possibleMove_25, possibleMove_26, possibleMove_27, possibleMove_28;
-
-    private ImageView[] possibleMoves;
-
-
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_options);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        width = displayMetrics.widthPixels - 2;
-
-        AbsoluteLayout border = findViewById(R.id.border);
-        border.setMinimumHeight(width + 1);
-        AbsoluteLayout pieces = findViewById(R.id.pieces);
-        pieces.setMinimumHeight(width);
-
-        SharedPreferences sharedPreferences = getSharedPreferences("User_Data", 0);
         drawerLayout = findViewById(R.id.draw_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
+        loginButtons = findViewById(R.id.button_login);
+        guestButtons = findViewById(R.id.button_guest);
+        scoreContainer = findViewById(R.id.score_con);
+        name = findViewById(R.id.fullname_label);
+        username = findViewById(R.id.username_label);
+        score = findViewById(R.id.score_val);
+        img = findViewById(R.id.profile_image);
+
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectImage();
+            }
+
+        });
 
         findViewById(R.id.menuImg).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,179 +93,51 @@ public class GameOptions extends AppCompatActivity implements NavigationView.OnN
         available_codes = FirebaseDatabase.getInstance().getReference("Available Codes");
         games = FirebaseDatabase.getInstance().getReference("Games");
 
-
         Menu menu = navigationView.getMenu();
         menu.findItem(R.id.nav_game).setVisible(false);
 
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener(this);
 
-
+        sharedPreferences = getSharedPreferences("User_Data", 0);
         username_sp = sharedPreferences.getString("username", "");
         String name_sp = sharedPreferences.getString("name", "");
+        image_sp = sharedPreferences.getString("image", "");
+        score_val = sharedPreferences.getInt("score", 0);
 
         if (username_sp.equals("") && name_sp.equals("")) {
             menu.findItem(R.id.nav_profile).setVisible(false);
             menu.findItem(R.id.nav_login).setVisible(true);
             menu.findItem(R.id.nav_signup).setVisible(true);
+            menu.findItem(R.id.nav_logout).setVisible(false);
+            loginButtons.setVisibility(View.GONE);
+            guestButtons.setVisibility(View.VISIBLE);
+            scoreContainer.setVisibility(View.GONE);
+            name.setText("Guest");
+            username.setText("Login or Sign up to continue");
+
+            setMargins(loginButtons, 0, 0, 0, 0);
+            img.setImageResource(R.drawable.guest_icon);
+
         } else {
             menu.findItem(R.id.nav_profile).setVisible(true);
             menu.findItem(R.id.nav_login).setVisible(false);
             menu.findItem(R.id.nav_signup).setVisible(false);
+            menu.findItem(R.id.nav_logout).setVisible(true);
+            loginButtons.setVisibility(View.VISIBLE);
+            guestButtons.setVisibility(View.GONE);
+            scoreContainer.setVisibility(View.VISIBLE);
+            name.setText(name_sp);
+            username.setText(username_sp);
+            score.setText(String.valueOf(score_val));
+            if (!image_sp.equals(""))
+                img.setImageBitmap(convertStringToBitmap(image_sp));
+            else
+                img.setImageResource(R.drawable.guest_icon);
+
+            setMargins(loginButtons, 0, 25, 0, 0);
+
         }
-        drawBoard();
-
-        //black
-        blackPawn_01 = findViewById(R.id.blackPawn_1);
-        blackPawn_02 = findViewById(R.id.blackPawn_2);
-        blackPawn_03 = findViewById(R.id.blackPawn_3);
-        blackPawn_04 = findViewById(R.id.blackPawn_4);
-        blackPawn_05 = findViewById(R.id.blackPawn_5);
-        blackPawn_06 = findViewById(R.id.blackPawn_6);
-        blackPawn_07 = findViewById(R.id.blackPawn_7);
-        blackPawn_08 = findViewById(R.id.blackPawn_8);
-
-        blackRook_01 = findViewById(R.id.blackRook_1);
-        blackRook_02 = findViewById(R.id.blackRook_2);
-
-        blackKnight_01 = findViewById(R.id.blackKnight_1);
-        blackKnight_02 = findViewById(R.id.blackKnight_2);
-
-        blackBishop_01 = findViewById(R.id.blackBishop_1);
-        blackBishop_02 = findViewById(R.id.blackBishop_2);
-
-        blackKing = findViewById(R.id.blackKing);
-        blackQueen = findViewById(R.id.blackQueen);
-
-        //white
-        whitePawn_01 = findViewById(R.id.whitePawn_1);
-        whitePawn_03 = findViewById(R.id.whitePawn_3);
-        whitePawn_02 = findViewById(R.id.whitePawn_2);
-        whitePawn_04 = findViewById(R.id.whitePawn_4);
-        whitePawn_05 = findViewById(R.id.whitePawn_5);
-        whitePawn_06 = findViewById(R.id.whitePawn_6);
-        whitePawn_07 = findViewById(R.id.whitePawn_7);
-        whitePawn_08 = findViewById(R.id.whitePawn_8);
-
-        whiteRook_01 = findViewById(R.id.whiteRook_1);
-        whiteRook_02 = findViewById(R.id.whiteRook_2);
-
-        whiteKnight_01 = findViewById(R.id.whiteKnight_1);
-        whiteKnight_02 = findViewById(R.id.whiteKnight_2);
-
-        whiteBishop_01 = findViewById(R.id.whiteBishop_1);
-        whiteBishop_02 = findViewById(R.id.whiteBishop_2);
-
-        whiteKing = findViewById(R.id.whiteKing);
-        whiteQueen = findViewById(R.id.whiteQueen);
-
-        black = new ImageView[][]{{blackPawn_01, blackPawn_02, blackPawn_03, blackPawn_04, blackPawn_05, blackPawn_06, blackPawn_07, blackPawn_08},
-                {blackRook_01, blackKnight_01, blackBishop_01, blackQueen, blackKing, blackBishop_02, blackKnight_02, blackRook_02}};
-
-        white = new ImageView[][]{{whitePawn_01, whitePawn_02, whitePawn_03, whitePawn_04, whitePawn_05, whitePawn_06, whitePawn_07, whitePawn_08},
-                {whiteRook_01, whiteKnight_01, whiteBishop_01, whiteQueen, whiteKing, whiteBishop_02, whiteKnight_02, whiteRook_02}};
-
-        for (ImageView[] imageViews : black) {
-            for (ImageView i : imageViews) {
-                i.getLayoutParams().height = width / 8;
-                i.getLayoutParams().width = width / 8;
-            }
-        }
-
-        for (ImageView[] imageViews : white) {
-            for (ImageView i : imageViews) {
-                i.getLayoutParams().height = width / 8;
-                i.getLayoutParams().width = width / 8;
-            }
-        }
-
-        arrangeBoard(PieceColor.WHITE);
-
-        board = new Board();
-
-        possibleMove_01 = findViewById(R.id.legal_01);
-        possibleMove_02 = findViewById(R.id.legal_02);
-        possibleMove_03 = findViewById(R.id.legal_03);
-        possibleMove_04 = findViewById(R.id.legal_04);
-        possibleMove_05 = findViewById(R.id.legal_05);
-        possibleMove_06 = findViewById(R.id.legal_06);
-        possibleMove_07 = findViewById(R.id.legal_07);
-        possibleMove_08 = findViewById(R.id.legal_08);
-        possibleMove_09 = findViewById(R.id.legal_09);
-        possibleMove_10 = findViewById(R.id.legal_10);
-        possibleMove_11 = findViewById(R.id.legal_11);
-        possibleMove_12 = findViewById(R.id.legal_12);
-        possibleMove_13 = findViewById(R.id.legal_13);
-        possibleMove_14 = findViewById(R.id.legal_14);
-        possibleMove_15 = findViewById(R.id.legal_15);
-        possibleMove_16 = findViewById(R.id.legal_16);
-        possibleMove_17 = findViewById(R.id.legal_17);
-        possibleMove_18 = findViewById(R.id.legal_18);
-        possibleMove_19 = findViewById(R.id.legal_19);
-        possibleMove_20 = findViewById(R.id.legal_20);
-        possibleMove_21 = findViewById(R.id.legal_21);
-        possibleMove_22 = findViewById(R.id.legal_22);
-        possibleMove_23 = findViewById(R.id.legal_23);
-        possibleMove_24 = findViewById(R.id.legal_24);
-        possibleMove_25 = findViewById(R.id.legal_25);
-        possibleMove_26 = findViewById(R.id.legal_26);
-        possibleMove_27 = findViewById(R.id.legal_27);
-        possibleMove_28 = findViewById(R.id.legal_28);
-
-        possibleMoves = new ImageView[]{possibleMove_01, possibleMove_02, possibleMove_03, possibleMove_04, possibleMove_05, possibleMove_06, possibleMove_07,
-                possibleMove_08, possibleMove_09, possibleMove_10, possibleMove_11, possibleMove_12, possibleMove_13, possibleMove_14,
-                possibleMove_15, possibleMove_16, possibleMove_17, possibleMove_18, possibleMove_19, possibleMove_20, possibleMove_21,
-                possibleMove_22, possibleMove_23, possibleMove_24, possibleMove_25, possibleMove_26, possibleMove_27, possibleMove_28};
-
-        for (ImageView i : possibleMoves) {
-            i.getLayoutParams().height = (int) ((width / 8) * CIRCLE_SIZE);
-            i.getLayoutParams().width = (int) ((width / 8) * CIRCLE_SIZE);
-            i.setVisibility(View.INVISIBLE);
-            i.setAlpha(0.7f);
-            i.setElevation(100);
-        }
-
-        pieces.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    int x = (int) event.getX();
-                    int y = (int) event.getY();
-                    int tile_x = getTileId(x, y)[1];
-                    int tile_y = getTileId(x, y)[0];
-
-//                    Toast.makeText(GameOptions.this, tile_x + ", " + tile_y, Toast.LENGTH_SHORT).show();
-
-                    if (!pressed) {
-                        if (board.isPiece(tile_x, tile_y)) {
-                            setInvisible();
-                            showLegalMoves(board.getPiece(tile_x, tile_y));
-                            pressed = true;
-                            currentPiece_x = tile_x;
-                            currentPiece_y = tile_y;
-                        }
-                    } else if (pressed) {
-                        if (board.movePiece(currentPiece_x, currentPiece_y, tile_x, tile_y)) {
-                            movePiece(currentPiece_x, currentPiece_y, tile_x, tile_y);
-                            pressed = false;
-                            setInvisible();
-                        } else {
-                            pressed = false;
-                            if (board.isPiece(tile_x, tile_y)) {
-                                setInvisible();
-                                showLegalMoves(board.getPiece(tile_x, tile_y));
-                                pressed = true;
-                                currentPiece_x = tile_x;
-                                currentPiece_y = tile_y;
-                            } else {
-                                setInvisible();
-                            }
-                        }
-                    }
-                }
-
-                return true;
-            }
-        });
 
 //        //define black pieces
 //        ChessPiece blackPawn_01 = new Pawn(new Position(1, 0), PieceColor.BLACK);
@@ -330,12 +187,96 @@ public class GameOptions extends AppCompatActivity implements NavigationView.OnN
 
     }
 
+    public String convertBitmapToString(Bitmap bm) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
+        byte[] b = baos.toByteArray();
+        return Base64.encodeToString(b, Base64.DEFAULT);
+    }
+
+    public Bitmap convertStringToBitmap(String encoded) {
+        if (encoded == null)
+            return null;
+        byte[] imageAsBytes = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+    }
+
+
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else
             super.onBackPressed();
+    }
+
+    private void setMargins(View view, int left, int top, int right, int bottom) {
+        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            p.setMargins(left, top, right, bottom);
+            view.requestLayout();
+        }
+    }
+
+    private void selectImage() {
+
+        final CharSequence[] items = {"Camera", "Gallery"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(GameOptions.this);
+        builder.setTitle("Add Image");
+
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (items[i].equals("Camera")) {
+
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, REQUEST_CAMERA);
+
+                } else if (items[i].equals("Gallery")) {
+
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setType("image/*");
+                    startActivityForResult(intent, SELECT_FILE);
+
+                }
+            }
+        });
+        builder.show();
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+
+            DatabaseReference user = FirebaseDatabase.getInstance().getReference("Users").child(username_sp);
+            if (requestCode == REQUEST_CAMERA) {
+
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                img.setImageBitmap(bitmap);
+                user.child("image").setValue(convertBitmapToString(bitmap));
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("image", convertBitmapToString(bitmap));
+                editor.apply();
+            } else if (requestCode == SELECT_FILE) {
+
+                Uri selectedImageUri = data.getData();
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
+                    img.setImageBitmap(bitmap);
+                    user.child("image").setValue(convertBitmapToString(bitmap));
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("image", convertBitmapToString(bitmap));
+                    editor.apply();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
     }
 
     @Override
@@ -349,7 +290,7 @@ public class GameOptions extends AppCompatActivity implements NavigationView.OnN
                 intent = new Intent(GameOptions.this, SignUp.class);
                 break;
             case R.id.nav_online:
-                //TODO
+                randomOnlineGame();
                 break;
             case R.id.nav_regular:
                 intent = new Intent(GameOptions.this, OfflineGame.class);
@@ -362,6 +303,22 @@ public class GameOptions extends AppCompatActivity implements NavigationView.OnN
                 break;
             case R.id.nav_vsFriendOnline:
                 open_join_create_game_Dialog();
+                break;
+            case R.id.nav_settings:
+                intent = new Intent(GameOptions.this, Settings.class);
+                break;
+            case R.id.nav_logout:
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("name", "");
+                editor.putString("username", "");
+                editor.putString("email", "");
+                editor.putString("phone", "");
+                editor.putString("password", "");
+                editor.putString("image", "");
+                editor.putInt("score", 0);
+                editor.commit();
+                startActivity(new Intent(GameOptions.this, GameOptions.class));
+                finish();
                 break;
             default:
                 Toast.makeText(GameOptions.this, "", Toast.LENGTH_LONG).show();
@@ -409,12 +366,166 @@ public class GameOptions extends AppCompatActivity implements NavigationView.OnN
         }
     }
 
+    public void randomOnlineGame(View view) {
+        DatabaseReference rndOnline = FirebaseDatabase.getInstance().getReference("RandomOnline");
+        rndOnline.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    //login to an existing game
+                    String code = snapshot.getValue().toString();
+                    rndOnline.setValue(null);
+                    games.child("ChessGame" + code).child("users").child("joiner").setValue(username_sp);
+                    Intent game = new Intent(GameOptions.this, OnlineGame.class);
+                    setMyColor(code, game);
+                    game.putExtra("game_code", "ChessGame" + code);
+                    game.putExtra("player_type", "joiner");
+                    startActivity(game);
+                    finish();
+
+                } else {
+                    //create new game
+                    String gameId = generateRandomCode();
+                    rndOnline.setValue(gameId);
+                    //creates the game in the DB
+                    games.child("ChessGame" + gameId).child("Chat").setValue("");
+                    games.child("ChessGame" + gameId).child("users").child("creator").setValue(username_sp);
+                    String myColor = randomColor();
+                    games.child("ChessGame" + gameId).child("colors").child(username_sp).setValue(myColor);
+                    games.child("ChessGame" + gameId).child("firstColor").setValue(myColor);
+                    games.child("ChessGame" + gameId).child("Status");
+                    games.child("ChessGame" + gameId).child("Online").setValue("Online");
+
+                    openWaitDialogOnline();
+
+                    rndOnline.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.getValue() == null) {
+
+                                games.child("ChessGame" + gameId).child("users").child("joiner").addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if (snapshot.exists()) {
+                                            waitDialogOnline.cancel();
+                                            Intent game = new Intent(GameOptions.this, OnlineGame.class);
+                                            game.putExtra("game_code", "ChessGame" + gameId);
+                                            game.putExtra("player_type", "creator");
+                                            game.putExtra("myColor", myColor);
+                                            startActivity(game);
+                                            finish();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void randomOnlineGame() {
+        DatabaseReference rndOnline = FirebaseDatabase.getInstance().getReference("RandomOnline");
+        rndOnline.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    //login to an existing game
+                    String code = snapshot.getValue().toString();
+                    rndOnline.setValue(null);
+                    games.child("ChessGame" + code).child("users").child("joiner").setValue(username_sp);
+                    Intent game = new Intent(GameOptions.this, OnlineGame.class);
+                    setMyColor(code, game);
+                    game.putExtra("game_code", "ChessGame" + code);
+                    game.putExtra("player_type", "joiner");
+                    startActivity(game);
+                    finish();
+
+                } else {
+                    //create new game
+                    String gameId = generateRandomCode();
+                    rndOnline.setValue(gameId);
+                    //creates the game in the DB
+                    games.child("ChessGame" + gameId).child("Chat").setValue("");
+                    games.child("ChessGame" + gameId).child("users").child("creator").setValue(username_sp);
+                    String myColor = randomColor();
+                    games.child("ChessGame" + gameId).child("colors").child(username_sp).setValue(myColor);
+                    games.child("ChessGame" + gameId).child("firstColor").setValue(myColor);
+                    games.child("ChessGame" + gameId).child("Status");
+                    games.child("ChessGame" + gameId).child("Online").setValue("Online");
+
+                    openWaitDialogOnline();
+
+                    rndOnline.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.getValue() == null) {
+
+                                games.child("ChessGame" + gameId).child("users").child("joiner").addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if (snapshot.exists()) {
+                                            waitDialogOnline.cancel();
+                                            Intent game = new Intent(GameOptions.this, OnlineGame.class);
+                                            game.putExtra("game_code", "ChessGame" + gameId);
+                                            game.putExtra("player_type", "creator");
+                                            game.putExtra("myColor", myColor);
+                                            startActivity(game);
+                                            finish();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     public void open_game_code_Dialog(View view) {
         create_join.cancel();
         gameCode = new Dialog(this);
         gameCode.setContentView(R.layout.join_online_game_dialog);
         gameCode.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        gameCode.setCancelable(false);
+        gameCode.setCancelable(true);
         gameCode.show();
     }
 
@@ -434,6 +545,13 @@ public class GameOptions extends AppCompatActivity implements NavigationView.OnN
                                 for (DataSnapshot data : snapshot.getChildren()) {
                                     data.getRef().removeValue();
                                 }
+                                games.child("ChessGame" + code).child("users").child("joiner").setValue(username_sp);
+                                Intent game = new Intent(GameOptions.this, OnlineGame.class);
+                                setMyColor(code, game);
+                                game.putExtra("game_code", "ChessGame" + code);
+                                game.putExtra("player_type", "joiner");
+                                startActivity(game);
+                                finish();
                             }
 
                             @Override
@@ -445,12 +563,10 @@ public class GameOptions extends AppCompatActivity implements NavigationView.OnN
                         gameCode.cancel();
                         create_join.cancel();
 
-                        games.child("ChessGame" + code).child("users").child("joiner").setValue(username_sp);
-                        Intent game = new Intent(GameOptions.this, OnlineGame.class);
-                        game.putExtra("game_code", "ChessGame" + code);
-                        game.putExtra("player_type", "joiner");
-                        startActivity(game);
+                    } else {
+                        Toast.makeText(GameOptions.this, "Game Code Does Not Exists", Toast.LENGTH_SHORT).show();
                     }
+
                 }
 
                 @Override
@@ -468,26 +584,46 @@ public class GameOptions extends AppCompatActivity implements NavigationView.OnN
         available_codes.child(gameId).setValue(gameId);
 
         //creates the game in the DB
-        games.child("ChessGame" + gameId).child("Board").setValue("");
         games.child("ChessGame" + gameId).child("Chat").setValue("");
         games.child("ChessGame" + gameId).child("users").child("creator").setValue(username_sp);
+        String myColor = randomColor();
+        games.child("ChessGame" + gameId).child("colors").child(username_sp).setValue(myColor);
+        games.child("ChessGame" + gameId).child("firstColor").setValue(myColor);
+        games.child("ChessGame" + gameId).child("Status");
 
         create_join.cancel();
         openWaitDialog(gameId);
 
-        DatabaseReference codeRef = FirebaseDatabase.getInstance().getReference("Available Codes").child(gameId);
-        codeRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference codeRef = FirebaseDatabase.getInstance().getReference("Available Codes");
+        Query query = codeRef.orderByKey().equalTo(gameId);
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.getValue() == null) {
 
-                    waitDialog.cancel();
+                    games.child("ChessGame" + gameId).child("users").child("joiner").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                waitDialog.cancel();
 
-                    Intent game = new Intent(GameOptions.this, OnlineGame.class);
-                    game.putExtra("game_code", "ChessGame" + gameId);
-                    game.putExtra("player_type", "creator");
-                    startActivity(game);
+                                Intent game = new Intent(GameOptions.this, OnlineGame.class);
+                                game.putExtra("game_code", "ChessGame" + gameId);
+                                game.putExtra("player_type", "creator");
+                                game.putExtra("myColor", myColor);
+                                startActivity(game);
+                                finish();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
                 }
+
             }
 
             @Override
@@ -497,7 +633,10 @@ public class GameOptions extends AppCompatActivity implements NavigationView.OnN
         });
 
 
+    }
 
+    public String randomColor() {
+        return colors[random.nextInt(2)];
     }
 
     public void openWaitDialog(String gameId) {
@@ -506,16 +645,26 @@ public class GameOptions extends AppCompatActivity implements NavigationView.OnN
         TextView gameCodeTxt = waitDialog.findViewById(R.id.gameCodeTxt);
         waitDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         waitDialog.setCancelable(false);
-        gameCodeTxt.setText("the Game Code is: "+ gameId);
+        gameCodeTxt.setText("the Game Code is: " + gameId);
         waitDialog.show();
+    }
+
+    public void openWaitDialogOnline() {
+        waitDialogOnline = new Dialog(this);
+        waitDialogOnline.setContentView(R.layout.wait_for_opponent_dialog_online);
+        waitDialogOnline.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        waitDialogOnline.setCancelable(false);
+        waitDialogOnline.show();
     }
 
     public void toLoginFromGame(View view) {
         startActivity(new Intent(GameOptions.this, Login.class));
+        finish();
     }
 
     public void toSignUpFromGame(View view) {
         startActivity(new Intent(GameOptions.this, SignUp.class));
+        finish();
     }
 
     public String generateRandomCode() {
@@ -541,154 +690,68 @@ public class GameOptions extends AppCompatActivity implements NavigationView.OnN
         return code.toString();
     }
 
-    public void drawBoard() {
-        int ROWS = 8;
-        int tileSize = width / ROWS;
-        RelativeLayout boardLayout = findViewById(R.id.chessBoard);
-
-        int[] color;
-        for (int i = 0; i < ROWS; i++) {
-            int COLS = 8;
-            for (int j = 0; j < COLS; j++) {
-                if ((i + j) % 2 == 0) {
-                    color = WHITE;
-                } else {
-                    color = BLACK;
-                }
-                int x_pos = i * tileSize, y_pos = j * tileSize;
-                Tile tile = new Tile(this, x_pos, y_pos, x_pos + tileSize, y_pos + tileSize, color);
-                tiles[i][j] = tile;
-                boardLayout.addView(tile);
-            }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (create_join != null && guest != null && gameCode != null && waitDialog != null) {
+            create_join.dismiss();
+            guest.dismiss();
+            gameCode.dismiss();
+            waitDialog.dismiss();
         }
     }
 
-    public void arrangeBoard(PieceColor bottomColor) {
-        int tileSize = width / 8;
-        if (bottomColor == PieceColor.WHITE) {
-            //black pawns top
-            for (int i = 0; i < 8; i++) {
-                black[0][i].setX(i * tileSize);
-                black[0][i].setY(tileSize);
-            }
-            //black other
-            for (int i = 0; i < 8; i++) {
-                black[1][i].setX(i * tileSize);
-                black[1][i].setY(0);
-            }
-            //white pawns bottom
-            for (int i = 0; i < 8; i++) {
-                white[0][i].setX(i * tileSize);
-                white[0][i].setY(6 * tileSize);
-            }
-            //white other
-            for (int i = 0; i < 8; i++) {
-                white[1][i].setX(i * tileSize);
-                white[1][i].setY(7 * tileSize);
-            }
-        } else {
-            black[1][3] = blackKing;
-            black[1][4] = blackQueen;
-            white[1][3] = whiteKing;
-            white[1][4] = whiteQueen;
-            //white pawns bottom
-            for (int i = 0; i < 8; i++) {
-                white[0][i].setX(i * tileSize);
-                white[0][i].setY(tileSize);
-            }
-            //white other
-            for (int i = 0; i < 8; i++) {
-                white[1][i].setX(i * tileSize);
-                white[1][i].setY(0);
-            }
-
-            //black pawns top
-            for (int i = 0; i < 8; i++) {
-                black[0][i].setX(i * tileSize);
-                black[0][i].setY(6 * tileSize);
-            }
-            //black other
-            for (int i = 0; i < 8; i++) {
-                black[1][i].setX(i * tileSize);
-                black[1][i].setY(7 * tileSize);
-            }
-        }
-
-    }
-
-    public int[] getTileId(int x, int y) {
-        int row = x / (width / 8);
-        int col = y / (width / 8);
-        return new int[]{row, col};
-    }
-
-    public void setPositionOfCircle(int x, int y, ImageView circle) {
-        int y_pos = (int) (x * (width / 8) + ((1 - CIRCLE_SIZE) * (width / 8)) / 1.9);
-        int x_pos = (int) (y * (width / 8) + ((1 - CIRCLE_SIZE) * (width / 8)) / 1.9);
-        circle.setX(x_pos);
-        circle.setY(y_pos);
-        circle.setVisibility(View.VISIBLE);
-    }
-
-    public void setInvisible() {
-        for (ImageView i : possibleMoves) {
-            i.setX(-1000);
-            i.setY(-1000);
-        }
-    }
-
-    public void showLegalMoves(ChessPiece piece) {
-        AlphaAnimation animation1 = new AlphaAnimation(0.3f, 1.0f);
-        animation1.setDuration(250);
-        animation1.setFillAfter(true);
-        ArrayList<Position> m_legalMoves = piece.legalMoves(board);
-        for (int i = 0; i < m_legalMoves.size(); i++) {
-            int x = m_legalMoves.get(i).getPos_x();
-            int y = m_legalMoves.get(i).getPos_y();
-            setPositionOfCircle(x, y, possibleMoves[i]);
-            possibleMoves[i].startAnimation(animation1);
-        }
-    }
-
-    public void movePiece(int current_x, int current_y, int move_x, int move_y) {
-        ImageView piece = getPieceFromCanvasPos(current_x, current_y);
-        setPiecePosition(move_x, move_y, piece);
-
-    }
-
-    public ImageView getPieceFromCanvasPos(int x, int y) {
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 8; j++) {
-                int img_x = (int) white[i][j].getX(), pos_x = toPixels(y), img_y = (int) white[i][j].getY(), pos_y = toPixels(x);
-                if (inRange(img_x, pos_x) && inRange(img_y, pos_y)) {
-                    return white[i][j];
+    public void setMyColor(String code, Intent i) {
+        games.child("ChessGame" + code).child("firstColor").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String c = snapshot.getValue().toString();
+                    if (c.equals("white")) {
+                        games.child("ChessGame" + code).child("colors").child(username_sp).setValue("black");
+                        i.putExtra("myColor", "black");
+                    } else {
+                        games.child("ChessGame" + code).child("colors").child(username_sp).setValue("white");
+                        i.putExtra("myColor", "black");
+                    }
                 }
             }
-        }
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 8; j++) {
-                int img_x = (int) black[i][j].getX(), pos_x = toPixels(y), img_y = (int) black[i][j].getY(), pos_y = toPixels(x);
-                if (inRange(img_x, pos_x) && inRange(img_y, pos_y)) {
-                    return black[i][j];
-                }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
-        }
-        return null;
+        });
     }
 
-    public void setPiecePosition(int x, int y, ImageView piece) {
-        int y_pos = (int) (x * (width / 8));
-        int x_pos = (int) (y * (width / 8));
-        piece.setX(x_pos);
-        piece.setY(y_pos);
+    public void removeGame(View view) {
+        TextView codeHandler = waitDialog.findViewById(R.id.gameCodeTxt);
+        String code = codeHandler.getText().toString().substring(18);
+        available_codes.child(code).setValue(null);
+        games.child("ChessGame" + code).setValue(null);
+        waitDialog.cancel();
     }
 
-    public int toPixels(int x) {
-        return (x * (width / 8));
+    public void toOffline(View view) {
+        startActivity(new Intent(GameOptions.this, OfflineGame.class));
     }
 
-    public boolean inRange(int imgPos, int piecePos) {
-        final int deadBand = 5;
-        return Math.abs(imgPos - piecePos) < deadBand;
+    public void removeGameOnline(View view) {
+        DatabaseReference rndOnline = FirebaseDatabase.getInstance().getReference("RandomOnline");
+        rndOnline.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String code = snapshot.getValue().toString();
+                DatabaseReference game = FirebaseDatabase.getInstance().getReference("Games").child("ChessGame" + code);
+                game.setValue(null);
+                rndOnline.setValue(null);
+                waitDialogOnline.dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

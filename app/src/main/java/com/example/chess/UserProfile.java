@@ -1,17 +1,26 @@
 package com.example.chess;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -21,20 +30,27 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 public class UserProfile extends AppCompatActivity {
     private TextInputLayout username, password, fullName, email, phone;
     private TextView username_label, name_label;
     //current user data
-    private String _USERNAME, _NAME, _EMAIL, _PHONE, _PASSWORD;
+    private String _USERNAME, _NAME, _EMAIL, _PHONE, _PASSWORD, _IMAGE;
+    private int _SCORE;
     private DatabaseReference reference;
     private Boolean taken = false;
     private SharedPreferences pref;
+    private ImageView img;
+    private int REQUEST_CAMERA = 1, SELECT_FILE = 0;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         reference = FirebaseDatabase.getInstance().getReference().child("Users");
 
@@ -43,6 +59,14 @@ public class UserProfile extends AppCompatActivity {
         fullName = findViewById(R.id.fullname);
         email = findViewById(R.id.email);
         phone = findViewById(R.id.phone);
+        img = findViewById(R.id.profile_image);
+
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectImage();
+            }
+        });
 
         username_label = findViewById(R.id.username_label);
         name_label = findViewById(R.id.fullname_label);
@@ -59,12 +83,82 @@ public class UserProfile extends AppCompatActivity {
         password.getEditText().addTextChangedListener(new ValidationTextWatcher(password));
     }
 
+    private void selectImage() {
+
+        final CharSequence[] items = {"Camera", "Gallery"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(UserProfile.this);
+        builder.setTitle("Add Image");
+
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (items[i].equals("Camera")) {
+
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, REQUEST_CAMERA);
+
+                } else if (items[i].equals("Gallery")) {
+
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setType("image/*");
+                    startActivityForResult(intent, SELECT_FILE);
+
+                }
+            }
+        });
+        builder.show();
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+
+            if (requestCode == REQUEST_CAMERA) {
+                bitmap = (Bitmap) data.getExtras().get("data");
+                img.setImageBitmap(bitmap);
+
+            } else if (requestCode == SELECT_FILE) {
+
+                Uri selectedImageUri = data.getData();
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
+                    img.setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        }
+    }
+
+    public String convertBitmapToString(Bitmap bm) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
+        byte[] b = baos.toByteArray();
+        return Base64.encodeToString(b, Base64.DEFAULT);
+    }
+
+    public Bitmap convertStringToBitmap(String encoded) {
+        if (encoded == null)
+            return null;
+        byte[] imageAsBytes = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+    }
+
     private void showUserData() {
         _USERNAME = pref.getString("username", null);
         _PASSWORD = pref.getString("password", null);
         _EMAIL = pref.getString("email", null);
         _PHONE = pref.getString("phone", null);
         _NAME = pref.getString("name", null);
+        _SCORE = pref.getInt("score", 0);
+        _IMAGE = pref.getString("image", "");
 
         fullName.getEditText().setText(_NAME);
         username.getEditText().setText(_USERNAME);
@@ -74,14 +168,21 @@ public class UserProfile extends AppCompatActivity {
 
         name_label.setText(_NAME);
         username_label.setText(_USERNAME);
+
+        if (!_IMAGE.equals(""))
+            img.setImageBitmap(convertStringToBitmap(_IMAGE));
+        else
+            img.setImageResource(R.drawable.guest_icon);
     }
 
     public void update(View view) {
-        if (!change_email() | !change_name() | !change_password() | !change_phone()) {
+        if (!change_email() | !change_name() | !change_password() | !change_phone() | !change_image()) {
             Toast.makeText(this, "Invalid Data", Toast.LENGTH_SHORT).show();
         } else {
             checkIfExsistAndChange();
             Toast.makeText(UserProfile.this, "Data Saved Successfully", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(UserProfile.this, GameOptions.class));
+            finish();
         }
     }
 
@@ -116,7 +217,7 @@ public class UserProfile extends AppCompatActivity {
             return true;
 
         else if (validateUsername()) {
-            User user = new User(_NAME, username.getEditText().getText().toString(), _EMAIL, _PHONE, _PASSWORD);
+            User user = new User(_NAME, username.getEditText().getText().toString(), _EMAIL, _PHONE, _PASSWORD, convertBitmapToString(bitmap), _SCORE);
             reference.child(username.getEditText().getText().toString()).setValue(user);
 
             //remove
@@ -136,10 +237,12 @@ public class UserProfile extends AppCompatActivity {
             });
 
             _USERNAME = username.getEditText().getText().toString();
+            _IMAGE = convertBitmapToString(bitmap);
             username_label.setText(_USERNAME);
 
             SharedPreferences.Editor editor = pref.edit();
             editor.putString("username", _USERNAME);
+            editor.putString("image", _IMAGE);
             editor.apply();
 
             return true;
@@ -163,6 +266,19 @@ public class UserProfile extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    private Boolean change_image() {
+        if(bitmap!= null) {
+            _IMAGE = convertBitmapToString(bitmap);
+            reference.child(_USERNAME).child("image").setValue(_IMAGE);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("image", _IMAGE);
+            editor.apply();
+        }
+bitmap=null;
+        return true;
+
     }
 
     private Boolean change_phone() {

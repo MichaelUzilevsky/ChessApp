@@ -14,12 +14,13 @@
         android:background="@color/mainRed"
         android:padding="20dp">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/chess"></ImageView>
+            android:src="@drawable/guest_icon"/>
+
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -78,82 +79,35 @@
                 android:padding="5dp">
 
                 <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_centerHorizontal="true"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_centerInParent="true"
                     android:src="@drawable/lose"></ImageView>
 
-                <TextView
-                    android:id="@+id/losses_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:fontFamily="@font/bungee_regular"
-                    android:includeFontPadding="false"
-                    android:text="losses"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="20dp"></TextView>
+<!--                <TextView-->
+<!--                    android:id="@+id/losses_label"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_centerInParent="true"-->
+<!--                    android:fontFamily="@font/bungee_regular"-->
+<!--                    android:includeFontPadding="false"-->
+<!--                    android:text="losses"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="20dp"></TextView>-->
 
-                <TextView
-                    android:id="@+id/losses"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/losses_label"
-                    android:layout_centerInParent="true"
-                    android:fontFamily="@font/bungee_regular"
-                    android:includeFontPadding="false"
-                    android:text="28"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="14dp"></TextView>
-
-            </RelativeLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="0dp"
-            android:layout_height="125dp"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            app:cardBackgroundColor="@color/mainBlack"
-            app:cardElevation="10dp">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="5dp">
-
-                <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_centerHorizontal="true"
-                    android:src="@drawable/game_controller"></ImageView>
-
-                <TextView
-                    android:id="@+id/games_played_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:fontFamily="@font/bungee_regular"
-                    android:includeFontPadding="false"
-                    android:text="games played"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="20dp"></TextView>
-
-                <TextView
-                    android:id="@+id/games_played"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/games_played_label"
-                    android:layout_centerInParent="true"
-                    android:fontFamily="@font/bungee_regular"
-                    android:includeFontPadding="false"
-                    android:text="69"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="14dp"></TextView>
+<!--                <TextView-->
+<!--                    android:id="@+id/losses"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_below="@+id/losses_label"-->
+<!--                    android:layout_centerInParent="true"-->
+<!--                    android:fontFamily="@font/bungee_regular"-->
+<!--                    android:includeFontPadding="false"-->
+<!--                    android:text="28"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="14dp"></TextView>-->
 
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -172,35 +126,82 @@
                 android:padding="5dp">
 
                 <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_centerHorizontal="true"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/vs_friend_icon"></ImageView>
+
+<!--                <TextView-->
+<!--                    android:id="@+id/games_played_label"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_centerInParent="true"-->
+<!--                    android:fontFamily="@font/bungee_regular"-->
+<!--                    android:includeFontPadding="false"-->
+<!--                    android:text="games played"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="20dp"></TextView>-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/games_played"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_below="@+id/games_played_label"-->
+<!--                    android:layout_centerInParent="true"-->
+<!--                    android:fontFamily="@font/bungee_regular"-->
+<!--                    android:includeFontPadding="false"-->
+<!--                    android:text="69"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="14dp"></TextView>-->
+
+            </RelativeLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="125dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            app:cardBackgroundColor="@color/mainBlack"
+            app:cardElevation="10dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp">
+
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_centerInParent="true"
                     android:src="@drawable/trophy"></ImageView>
 
-                <TextView
-                    android:id="@+id/victories_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:fontFamily="@font/bungee_regular"
-                    android:includeFontPadding="false"
-                    android:text="wins"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="20dp"></TextView>
+<!--                <TextView-->
+<!--                    android:id="@+id/victories_label"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_centerInParent="true"-->
+<!--                    android:fontFamily="@font/bungee_regular"-->
+<!--                    android:includeFontPadding="false"-->
+<!--                    android:text="wins"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="20dp"></TextView>-->
 
-                <TextView
-                    android:id="@+id/victories"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/victories_label"
-                    android:layout_centerInParent="true"
-                    android:fontFamily="@font/bungee_regular"
-                    android:includeFontPadding="false"
-                    android:text="41"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="14dp"></TextView>
+<!--                <TextView-->
+<!--                    android:id="@+id/victories"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_below="@+id/victories_label"-->
+<!--                    android:layout_centerInParent="true"-->
+<!--                    android:fontFamily="@font/bungee_regular"-->
+<!--                    android:includeFontPadding="false"-->
+<!--                    android:text="41"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="14dp"></TextView>-->
 
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
