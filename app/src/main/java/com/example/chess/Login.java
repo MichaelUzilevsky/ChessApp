@@ -98,11 +98,13 @@ public class Login extends AppCompatActivity {
     }
 
     private void isUser() {
+        //user data
         String userEntered_username = username.getEditText().getText().toString().trim();
         String userEntered_password = password.getEditText().getText().toString().trim();
 
         DatabaseReference users_reference = FirebaseDatabase.getInstance().getReference("Users");
 
+        //get data from database
         users_reference.child(userEntered_username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -111,6 +113,7 @@ public class Login extends AppCompatActivity {
                     username.setErrorEnabled(false);
                     String password_DB = snapshot.child("password").getValue().toString();
 
+                    //matching passwords
                     if (password_DB.equals(userEntered_password)) {
 
                         password.setError(null);
@@ -123,6 +126,7 @@ public class Login extends AppCompatActivity {
                         String image_DB = snapshot.child("image").getValue().toString();
                         int score_DB = snapshot.child("score").getValue(Integer.class);
 
+                        //save to SP
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("name", name_DB);
                         editor.putString("username", username_DB);

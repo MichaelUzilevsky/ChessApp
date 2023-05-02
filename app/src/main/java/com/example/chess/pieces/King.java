@@ -131,17 +131,21 @@ public class King extends ChessPiece implements StraightSearch, DiagonalSearch {
 
         ChessPiece[][] pieces = board.getBoard();
 
+        //checks if other player is threatening this position
         if (board.isThreateningPosition(getPos_x(), getPos_y(), getColor()))
             return false;
 
         if (getColor().equals(PieceColor.WHITE)) {
+            //rook check
             if (board.isPiece(getPos_x(), 7, pieces) && board.getPiece(getPos_x(), 7, pieces) instanceof Rook &&
                     board.getPiece(getPos_x(), 7, pieces).getColor().equals(PieceColor.WHITE) &&
                     !((Rook) board.getPiece(getPos_x(), 7, pieces)).isMoved()) {
 
+                //other king check
                 if (board.isPiece(getPos_x() - 1, getPos_y() + 2, pieces) && board.getPiece(getPos_x() - 1, getPos_y() + 2, pieces) instanceof King)
                     return false;
 
+                //not threatening other positions
                 for (int i = 1; i < 3; i++) {
                     if (board.isPiece(getPos_x(), getPos_y() + i, pieces) || board.isThreateningPosition(getPos_x(), getPos_y() + i, getColor()))
                         return false;

@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity /* implements View.OnClickLi
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        //animation
         LottieAnimationView lottie = findViewById(R.id.animationView);
         ImageView circle = findViewById(R.id.circle);
         ImageView logo = findViewById(R.id.logo);
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity /* implements View.OnClickLi
         SharedPreferences sharedPreferences = getSharedPreferences("User_Data", 0);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
+        //default stats
         editor.putBoolean("playing", false);
         editor.putInt("whiteR", 232);
         editor.putInt("whiteG", 231);
@@ -37,33 +39,9 @@ public class MainActivity extends AppCompatActivity /* implements View.OnClickLi
         editor.apply();
 
         splash();
-//        root = FirebaseDatabase.getInstance();
-//        users_reference = root.getReference("Users");
-//        board_reference = root.getReference("Board");
-//
-//        users_Event_Listener = users_reference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                String _name = snapshot.child("name").getValue().toString();
-//                String _phone = snapshot.child("phone").getValue().toString();
-//
-//                name.setText(_name);
-//                phone.setText(_phone);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//
-//        name = findViewById(R.id.name);
-//        phone = findViewById(R.id.phone);
-//        button = findViewById(R.id.btn);
-//
-//        button.setOnClickListener(this);
     }
 
+    //start up animation
     private void splash(){
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -86,22 +64,5 @@ public class MainActivity extends AppCompatActivity /* implements View.OnClickLi
         splash();
         super.onRestart();
     }
-
-
-//    @Override
-//    public void onClick(View view) {
-//        if (view == button){
-//            User user = new User(phone.getText().toString(),name.getText().toString());
-//            //users_reference.child(phone.getText().toString()).setValue(user);
-//            users_reference.setValue(user);
-//
-//        }
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        users_reference.removeEventListener(users_Event_Listener);
-//    }
 
 }

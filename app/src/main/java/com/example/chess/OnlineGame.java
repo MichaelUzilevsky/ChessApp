@@ -386,10 +386,10 @@ public class OnlineGame extends AppCompatActivity {
                             int tile_x = getTileId(x, y, color)[1];
                             int tile_y = getTileId(x, y, color)[0];
 
-//                            Toast.makeText(OnlineGame.this, tile_x + ", " + tile_y, Toast.LENGTH_SHORT).show();
 
                             String check = "";
 
+                            //no piece is selected
                             if (!pressed) {
                                 if (board.isPiece(tile_x, tile_y, board.getBoard())) {
                                     PieceColor pieceColor = board.getPiece(tile_x, tile_y, board.getBoard()).getColor();
@@ -401,7 +401,9 @@ public class OnlineGame extends AppCompatActivity {
                                         currentPiece_y = tile_y;
                                     }
                                 }
-                            } else {
+                                //piece selected
+                            }
+                            else {
                                 if (board.canMove(currentPiece_x, currentPiece_y, tile_x, tile_y, board.getBoard())) {
                                     if (board.shouldEatPiece(tile_x, tile_y, board.getPiece(currentPiece_x, currentPiece_y, board.getBoard()), board.getBoard())) {
                                         board.eatPiece(currentPiece_x, currentPiece_y, tile_x, tile_y);
@@ -504,14 +506,17 @@ public class OnlineGame extends AppCompatActivity {
                                 int current_y = Integer.parseInt(String.valueOf(key.toCharArray()[1]));
                                 int move_x = Integer.parseInt(String.valueOf(key.toCharArray()[2]));
                                 int move_y = Integer.parseInt(String.valueOf(key.toCharArray()[3]));
+
                                 if (board.isPiece(move_x, move_y, board.getBoard())) {
                                     removePieceImg(move_x, move_y, PieceColor.WHITE);
                                 }
                                 board.getBoard()[move_x][move_y] = board.getBoard()[current_x][current_y];
                                 board.getBoard()[move_x][move_y].setPosition(new Position(move_x, move_y));
+                                //move the piece
                                 board.getBoard()[current_x][current_y] = null;
                                 movePieceImg(current_x, current_y, move_x, move_y, PieceColor.WHITE);
                                 switchTurn();
+                                //special cases
                                 if (key.length() >= 5) {
                                     String opp1 = String.valueOf(key.toCharArray()[4]);
                                     String opp2 = "";
@@ -576,7 +581,8 @@ public class OnlineGame extends AppCompatActivity {
 
                         }
                     });
-                } else {
+                }
+                else {
                     lastMove_White_ref.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -731,13 +737,6 @@ public class OnlineGame extends AppCompatActivity {
 
             }
         });
-    }
-
-    public String convertBitmapToString(Bitmap bm) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
-        byte[] b = baos.toByteArray();
-        return Base64.encodeToString(b, Base64.DEFAULT);
     }
 
     public Bitmap convertStringToBitmap(String encoded) {

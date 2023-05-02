@@ -55,8 +55,10 @@ public class Knight extends ChessPiece implements KnightSearch {
         int total_x = pos_x + x_move;
         int total_y = pos_y + y_move;
         if (inBoard(total_x, total_y, board.getSIZE())) {
+            //in board and enemy
             if(board.isPiece(total_x,total_y,pieces) && board.getPiece(total_x, total_y,pieces).getColor() != this.getColor())
                 return new Position(total_x, total_y);
+            //no piece
             else if(!board.isPiece(total_x,total_y,pieces)){
                 return new Position(total_x, total_y);
             }

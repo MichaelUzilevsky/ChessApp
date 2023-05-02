@@ -33,11 +33,4 @@ public class Position {
         Position position = (Position) o;
         return pos_x == position.pos_x && pos_y == position.pos_y;
     }
-
-
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(pos_x, pos_y);
-    }
 }

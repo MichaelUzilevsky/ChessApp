@@ -276,7 +276,7 @@ public class UserProfile extends AppCompatActivity {
             editor.putString("image", _IMAGE);
             editor.apply();
         }
-bitmap=null;
+        bitmap=null;
         return true;
 
     }

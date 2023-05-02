@@ -15,7 +15,7 @@ import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.chess.service.BackgroundMusicService;
 
-public class Settings extends AppCompatActivity {
+public class GameSettings extends AppCompatActivity {
 
     private View whiteTile, blackTile;
     private Intent serviceIntent;
@@ -154,7 +154,7 @@ public class Settings extends AppCompatActivity {
     }
 
     public void goBack(View view) {
-        startActivity(new Intent(Settings.this, GameOptions.class));
+        startActivity(new Intent(GameSettings.this, GameOptions.class));
         finish();
     }
 }

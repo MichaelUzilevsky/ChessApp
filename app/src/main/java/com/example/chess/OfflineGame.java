@@ -520,11 +520,6 @@ public class OfflineGame extends AppCompatActivity {
             turn = PieceColor.WHITE;
     }
 
-    public void reload(View view) {
-        finish();
-        startActivity(new Intent(OfflineGame.this, OfflineGame.class));
-    }
-
     //king side x = -2, queen side x = 3
     public void rookCastle(PieceColor color, int x) {
         if (color.equals(PieceColor.WHITE)) {

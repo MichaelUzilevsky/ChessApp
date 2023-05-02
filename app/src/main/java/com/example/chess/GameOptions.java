@@ -3,6 +3,7 @@ package com.example.chess;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,10 +11,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,6 +68,14 @@ public class GameOptions extends AppCompatActivity implements NavigationView.OnN
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_options);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        if (!mWifi.isConnected()) {
+            Toast.makeText(GameOptions.this, "you gay", Toast.LENGTH_LONG).show();
+        }
 
         drawerLayout = findViewById(R.id.draw_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -138,7 +151,6 @@ public class GameOptions extends AppCompatActivity implements NavigationView.OnN
             setMargins(loginButtons, 0, 25, 0, 0);
 
         }
-
 //        //define black pieces
 //        ChessPiece blackPawn_01 = new Pawn(new Position(1, 0), PieceColor.BLACK);
 //        ChessPiece blackPawn_02 = new Pawn(new Position(1, 1), PieceColor.BLACK);
@@ -184,7 +196,6 @@ public class GameOptions extends AppCompatActivity implements NavigationView.OnN
 //        ChessPiece whiteKing = new King(new Position(7, 4), PieceColor.WHITE);
 //
 //        ChessPiece whiteQueen = new Queen(new Position(7, 3), PieceColor.WHITE);
-
     }
 
     public String convertBitmapToString(Bitmap bm) {
@@ -200,7 +211,6 @@ public class GameOptions extends AppCompatActivity implements NavigationView.OnN
         byte[] imageAsBytes = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
     }
-
 
     @Override
     public void onBackPressed() {
@@ -305,7 +315,7 @@ public class GameOptions extends AppCompatActivity implements NavigationView.OnN
                 open_join_create_game_Dialog();
                 break;
             case R.id.nav_settings:
-                intent = new Intent(GameOptions.this, Settings.class);
+                intent = new Intent(GameOptions.this, GameSettings.class);
                 break;
             case R.id.nav_logout:
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -444,80 +454,90 @@ public class GameOptions extends AppCompatActivity implements NavigationView.OnN
     }
 
     public void randomOnlineGame() {
-        DatabaseReference rndOnline = FirebaseDatabase.getInstance().getReference("RandomOnline");
-        rndOnline.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    //login to an existing game
-                    String code = snapshot.getValue().toString();
-                    rndOnline.setValue(null);
-                    games.child("ChessGame" + code).child("users").child("joiner").setValue(username_sp);
-                    Intent game = new Intent(GameOptions.this, OnlineGame.class);
-                    setMyColor(code, game);
-                    game.putExtra("game_code", "ChessGame" + code);
-                    game.putExtra("player_type", "joiner");
-                    startActivity(game);
-                    finish();
+        //user isn't connected
+        if (username_sp.equals("")) {
+            guest = new Dialog(this);
+            guest.setContentView(R.layout.must_connect_dialog);
+            guest.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            guest.setCancelable(true);
+            guest.show();
+        }
+        else {
+            DatabaseReference rndOnline = FirebaseDatabase.getInstance().getReference("RandomOnline");
+            rndOnline.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        //login to an existing game
+                        String code = snapshot.getValue().toString();
+                        rndOnline.setValue(null);
+                        games.child("ChessGame" + code).child("users").child("joiner").setValue(username_sp);
+                        Intent game = new Intent(GameOptions.this, OnlineGame.class);
+                        setMyColor(code, game);
+                        game.putExtra("game_code", "ChessGame" + code);
+                        game.putExtra("player_type", "joiner");
+                        startActivity(game);
+                        finish();
 
-                } else {
-                    //create new game
-                    String gameId = generateRandomCode();
-                    rndOnline.setValue(gameId);
-                    //creates the game in the DB
-                    games.child("ChessGame" + gameId).child("Chat").setValue("");
-                    games.child("ChessGame" + gameId).child("users").child("creator").setValue(username_sp);
-                    String myColor = randomColor();
-                    games.child("ChessGame" + gameId).child("colors").child(username_sp).setValue(myColor);
-                    games.child("ChessGame" + gameId).child("firstColor").setValue(myColor);
-                    games.child("ChessGame" + gameId).child("Status");
-                    games.child("ChessGame" + gameId).child("Online").setValue("Online");
+                    } else {
+                        //create new game
+                        String gameId = generateRandomCode();
+                        rndOnline.setValue(gameId);
+                        //creates the game in the DB
+                        games.child("ChessGame" + gameId).child("Chat").setValue("");
+                        games.child("ChessGame" + gameId).child("users").child("creator").setValue(username_sp);
+                        String myColor = randomColor();
+                        games.child("ChessGame" + gameId).child("colors").child(username_sp).setValue(myColor);
+                        games.child("ChessGame" + gameId).child("firstColor").setValue(myColor);
+                        games.child("ChessGame" + gameId).child("Status");
+                        games.child("ChessGame" + gameId).child("Online").setValue("Online");
 
-                    openWaitDialogOnline();
+                        openWaitDialogOnline();
 
-                    rndOnline.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.getValue() == null) {
+                        rndOnline.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.getValue() == null) {
 
-                                games.child("ChessGame" + gameId).child("users").child("joiner").addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        if (snapshot.exists()) {
-                                            waitDialogOnline.cancel();
-                                            Intent game = new Intent(GameOptions.this, OnlineGame.class);
-                                            game.putExtra("game_code", "ChessGame" + gameId);
-                                            game.putExtra("player_type", "creator");
-                                            game.putExtra("myColor", myColor);
-                                            startActivity(game);
-                                            finish();
+                                    games.child("ChessGame" + gameId).child("users").child("joiner").addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if (snapshot.exists()) {
+                                                waitDialogOnline.cancel();
+                                                Intent game = new Intent(GameOptions.this, OnlineGame.class);
+                                                game.putExtra("game_code", "ChessGame" + gameId);
+                                                game.putExtra("player_type", "creator");
+                                                game.putExtra("myColor", myColor);
+                                                startActivity(game);
+                                                finish();
+                                            }
                                         }
-                                    }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
 
-                                    }
-                                });
+                                        }
+                                    });
+
+                                }
 
                             }
 
-                        }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+                            }
+                        });
 
-                        }
-                    });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+            });
+        }
     }
 
     public void open_game_code_Dialog(View view) {

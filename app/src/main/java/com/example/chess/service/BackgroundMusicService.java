@@ -35,7 +35,6 @@ public class BackgroundMusicService extends Service implements MediaPlayer.OnCom
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         mediaPlayer.start();
         return START_STICKY;
     }

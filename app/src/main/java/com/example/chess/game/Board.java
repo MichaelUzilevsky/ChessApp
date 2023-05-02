@@ -79,15 +79,6 @@ public class Board {
         this.pieces = boa;
     }
 
-    public void Reverse() {
-        ChessPiece[][] reverse = new ChessPiece[SIZE][SIZE];
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                reverse[i][j] = pieces[SIZE - 1 - i][SIZE - 1 - j];
-            }
-        }
-    }
-
     protected Boolean inBoard(int x, int y) {
         return (x >= 0 && x <= SIZE - 1) && (y >= 0 && y <= SIZE - 1);
     }
@@ -431,6 +422,4 @@ public class Board {
         }
         return nonNullObjects;
     }
-
-
 }

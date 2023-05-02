@@ -70,6 +70,7 @@ public class SignUp extends AppCompatActivity {
 
     private Boolean validateUsername(){
         String val = regUsername.getEditText().getText().toString().trim();
+        //
         String noSpace = "\\A\\w{6,20}\\z";
 
 
@@ -171,10 +172,11 @@ public class SignUp extends AppCompatActivity {
 
     public void saveData(View view) {
 
+        //did not pass check
         if(!validateName() | !validateUsername() | !validateEmail() | !validatePhone() | !validatePassword()) {
         }
         else {
-
+            //accuses to DB check if username does not exist
             Query checkUser = username_reference.orderByChild("username").equalTo(regUsername.getEditText().getText().toString().trim());
             checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -188,6 +190,7 @@ public class SignUp extends AppCompatActivity {
                         String phone = regPhone.getEditText().getText().toString().trim();
                         String password = regPassword.getEditText().getText().toString().trim();
 
+                        //create new pointer of user and then save it
                         User user = new User(name, username, email, phone, password, "", 1000);
 
 
@@ -195,6 +198,7 @@ public class SignUp extends AppCompatActivity {
 
                         Intent intent = new Intent(SignUp.this, Login.class);
 
+                        //animation between pages
                         Pair[] pairs = new Pair[6];
                         pairs[0] = new Pair<View, String>(main, "logo_txt");
                         pairs[1] = new Pair<View, String>(slogan, "slogan");
@@ -205,6 +209,7 @@ public class SignUp extends AppCompatActivity {
 
                         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(SignUp.this, pairs);
 
+                        //gives data to login
                         intent.putExtra("username", regUsername.getEditText().getText().toString().trim());
                         intent.putExtra("password", regPassword.getEditText().getText().toString().trim());
 
