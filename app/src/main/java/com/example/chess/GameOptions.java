@@ -70,12 +70,12 @@ public class GameOptions extends AppCompatActivity implements NavigationView.OnN
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
-        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-        if (!mWifi.isConnected()) {
-            Toast.makeText(GameOptions.this, "you gay", Toast.LENGTH_LONG).show();
-        }
+//        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+//
+//        if (!mWifi.isConnected()) {
+//            Toast.makeText(GameOptions.this, "no", Toast.LENGTH_LONG).show();
+//        }
 
         drawerLayout = findViewById(R.id.draw_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);

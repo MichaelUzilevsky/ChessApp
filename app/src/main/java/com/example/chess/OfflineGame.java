@@ -575,6 +575,7 @@ public class OfflineGame extends AppCompatActivity {
         }
         flip = !flip;
     }
+
     public void toMain(View view) {
         startActivity(new Intent(OfflineGame.this, GameOptions.class));
         finish();

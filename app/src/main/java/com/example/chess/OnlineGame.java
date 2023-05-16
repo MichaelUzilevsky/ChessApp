@@ -366,13 +366,16 @@ public class OnlineGame extends AppCompatActivity {
                     } else {
                         color = PieceColor.WHITE;
                     }
-                } else {
+                }
+                else {
                     color = myColor_;
                 }
+
                 if (color.equals(PieceColor.WHITE)) {
                     drawBoard_white();
                     arrangeBoard(PieceColor.WHITE);
-                } else {
+                }
+                else {
                     drawBoard_white();
                     arrangeBoard(PieceColor.BLACK);
                 }
@@ -401,8 +404,8 @@ public class OnlineGame extends AppCompatActivity {
                                         currentPiece_y = tile_y;
                                     }
                                 }
-                                //piece selected
                             }
+                            //piece selected
                             else {
                                 if (board.canMove(currentPiece_x, currentPiece_y, tile_x, tile_y, board.getBoard())) {
                                     if (board.shouldEatPiece(tile_x, tile_y, board.getPiece(currentPiece_x, currentPiece_y, board.getBoard()), board.getBoard())) {
@@ -410,7 +413,8 @@ public class OnlineGame extends AppCompatActivity {
                                         removePieceImg(tile_x, tile_y, color);
                                         movePieceImg(currentPiece_x, currentPiece_y, tile_x, tile_y, color);
                                         playEatSound();
-                                    } else {
+                                    }
+                                    else {
                                         if (board.getPiece(currentPiece_x, currentPiece_y, board.getBoard()) instanceof King) {
                                             //king size castle
                                             if (tile_y - currentPiece_y == 2) {
@@ -430,6 +434,7 @@ public class OnlineGame extends AppCompatActivity {
                                                 movePieceImg(currentPiece_x, currentPiece_y, tile_x, tile_y, color);
                                             }
                                         } else {
+
                                             board.movePiece(currentPiece_x, currentPiece_y, tile_x, tile_y);
                                             movePieceImg(currentPiece_x, currentPiece_y, tile_x, tile_y, color);
                                         }
@@ -450,7 +455,8 @@ public class OnlineGame extends AppCompatActivity {
                                     if (board.checkDraw(turn)) {
                                         drawDialog();
                                         check += "=";
-                                    } else {
+                                    }
+                                    else {
                                         switchTurn();
 
                                         if (board.checkCheckToColor(turn)) {
@@ -464,12 +470,13 @@ public class OnlineGame extends AppCompatActivity {
                                             }
                                         }
                                     }
+
                                     if (color.equals(PieceColor.WHITE)) {
                                         lastMove_White_ref.setValue(currentPiece_x + "" + currentPiece_y + "" + tile_x + "" + tile_y + check);
-                                    } else {
+                                    }
+                                    else {
                                         lastMove_Black_ref.setValue(currentPiece_x + "" + currentPiece_y + "" + tile_x + "" + tile_y + check);
                                     }
-
 
                                     pressed = false;
                                     setInvisible();
@@ -496,6 +503,7 @@ public class OnlineGame extends AppCompatActivity {
                         return true;
                     }
                 });
+
                 if (color.equals(PieceColor.WHITE)) {
                     lastMove_Black_ref.addValueEventListener(new ValueEventListener() {
                         @Override
